@@ -33,6 +33,7 @@ class HomeActivity : AppCompatActivity() {
         val chartButton = binding.activityHomeChart
         val homeButton = binding.activityHomeHome
         val addButton = binding.activityHomeAdd
+        val scanQrButton = binding.activityHomeQr
 
         val homeFragment = FragmentHome()
         val chartFragment = FragmentChart()
@@ -60,7 +61,6 @@ class HomeActivity : AppCompatActivity() {
             startActivity(goToAddPlant)
         }
 
-        val scanQrButton = binding.activityHomeQr
         scanQrButton.setOnClickListener(){
             val goToScanQR = Intent(this, ScanQrActivity::class.java)
             startActivity(goToScanQR)

@@ -32,6 +32,8 @@ class EditProfileActivity: AppCompatActivity(){
         }
     }
 
+    // TODO (Lind): make changes for garden name from db
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // set binding and full screen to remove action bar
         super.onCreate(savedInstanceState)
@@ -43,7 +45,6 @@ class EditProfileActivity: AppCompatActivity(){
         binding.confirmChangeButton.setOnClickListener{
             showConfirmationDialog()
         }
-
 
         // replace topNav with top nav fragment
         val topNav = FragmentTopNav(getColor(R.color.primary))
