@@ -183,7 +183,6 @@ class AddPlantActivity : AppCompatActivity(){
 
             binding.productInputButton.setOnClickListener {
                 if (ticker == 0){
-//                    pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                     val mimeType = "image/png"
                     pickMedia.launch(
                         PickVisualMediaRequest(

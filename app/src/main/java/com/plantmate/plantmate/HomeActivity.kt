@@ -3,6 +3,7 @@ package com.plantmate.plantmate
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.plantmate.plantmate.databinding.ActivityHomeBinding
 import com.plantmate.plantmate.fragments.FragmentChart
 import com.plantmate.plantmate.fragments.FragmentHome
@@ -12,6 +13,7 @@ import com.plantmate.plantmate.objects.FullScreenUtils.setFullScreen
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
+    private lateinit var mAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +22,14 @@ class HomeActivity : AppCompatActivity() {
 
         setContentView(binding.root)
         setFullScreen(this)
+
+        mAuth = FirebaseAuth.getInstance()
+        val user = mAuth.currentUser
+        if (user == null){
+            val goToEntry = Intent(this, MainActivity::class.java)
+            startActivity(goToEntry)
+        }
+
 
         val profileButton = binding.activityProfile
         val chartButton = binding.activityHomeChart
