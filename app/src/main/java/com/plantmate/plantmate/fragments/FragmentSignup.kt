@@ -17,6 +17,8 @@ import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.core.content.res.ResourcesCompat.getColor
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.plantmate.plantmate.EditProfileActivity
 import com.plantmate.plantmate.HomeActivity
 import com.plantmate.plantmate.R
@@ -28,6 +30,7 @@ import com.plantmate.plantmate.objects.FragmentUtils.replaceFragment
 class FragmentSignup: Fragment(R.layout.fragment_signup)  {
     private lateinit var binding: FragmentSignupBinding
     private lateinit var mAuth: FirebaseAuth
+    val db = Firebase.firestore
     private lateinit var mContainer: ViewGroup
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -111,15 +114,22 @@ class FragmentSignup: Fragment(R.layout.fragment_signup)  {
             mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(activity,"Sign up successful.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(activity,"User creation successful.", Toast.LENGTH_SHORT).show()
+                        val user = db.collection("users").document("${mAuth.uid}")
+                        val userData = hashMapOf(
+                            "gardenName" to "${binding.fragmentSignupEtGarden.text}"
+                        )
+                        user.set(userData)
+                            .addOnSuccessListener { documentReference ->
+                                Log.d("TAG", "DocumentSnapshot added with ID: $documentReference")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("TAGn\'t", "${mAuth.currentUser?.uid}Error adding document", e)
+                            }
 
-                        val containerHeight = mContainer.parent as ConstraintLayout
-                        val setHeight = containerHeight.layoutParams
-                        val fragmentView = R.id.activity_entry_fragment_view
-                        setHeight.height  = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 700F, resources.displayMetrics).toInt()
-                        containerHeight.layoutParams = setHeight
-                        replaceFragment(FragmentLogin(), fragmentView, parentFragmentManager)
-
+                        val goToLogin = Intent(activity, HomeActivity::class.java)
+                        startActivity(goToLogin)
+                        finishAffinity(requireActivity())
                     } else {
                         Log.w(ContentValues.TAG, "createUserWithEmail:failure", task.exception)
                         Toast.makeText(activity, "User creation failed.",
