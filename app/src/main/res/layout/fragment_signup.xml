@@ -103,10 +103,11 @@
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:adjustViewBounds="true"
-            android:backgroundTint="@color/jungle_green"
             android:scaleType="centerCrop"
             android:text="Sign up"
             android:textColor="@color/white"
+            android:backgroundTint="@color/gray"
+            android:enabled="false"
             app:cornerRadius="5dp" />
 
         <LinearLayout
