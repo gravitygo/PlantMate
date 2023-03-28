@@ -42,12 +42,7 @@ class FragmentSignup: Fragment(R.layout.fragment_signup)  {
         binding = FragmentSignupBinding.inflate(inflater)
 
         binding.fragmentSignupTvLogin.setOnClickListener{
-            val containerHeight = mContainer.parent as ConstraintLayout
-            val setHeight = containerHeight.layoutParams
-            val fragmentView = R.id.activity_entry_fragment_view
-            setHeight.height  = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 700F, resources.displayMetrics).toInt()
-            containerHeight.layoutParams = setHeight
-            replaceFragment(FragmentLogin(), fragmentView, parentFragmentManager)
+            replaceFragment(FragmentLogin(), R.id.activity_entry_fragment_view, parentFragmentManager)
         }
 
         binding.fragmentSignupEtGarden.addTextChangedListener(textWatcher)
@@ -127,15 +122,8 @@ class FragmentSignup: Fragment(R.layout.fragment_signup)  {
                                 Log.e("TAGn\'t", "${mAuth.currentUser?.uid}Error adding document", e)
                             }
 
-//                        val containerHeight = mContainer.parent as ConstraintLayout
-//                        val setHeight = containerHeight.layoutParams
-//                        val fragmentView = R.id.activity_entry_fragment_view
-//                        setHeight.height  = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 700F, resources.displayMetrics).toInt()
-//                        containerHeight.layoutParams = setHeight
                         replaceFragment(FragmentLogin(), R.id.activity_entry_fragment_view, parentFragmentManager)
-//                        val goToLogin = Intent(activity, HomeActivity::class.java)
-//                        startActivity(goToLogin)
-//                        finishAffinity(requireActivity())
+
                     } else {
                         Log.w(ContentValues.TAG, "createUserWithEmail:failure", task.exception)
                         Toast.makeText(activity, "User creation failed.",
