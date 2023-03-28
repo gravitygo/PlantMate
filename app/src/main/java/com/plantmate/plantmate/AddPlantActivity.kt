@@ -246,6 +246,8 @@ class AddPlantActivity : AppCompatActivity(){
             binding.confirmAddButton.isEnabled = false
             binding.confirmAddButton.backgroundTintList = ColorStateList.valueOf(getColor(R.color.gray))
             Toast.makeText(applicationContext, "Product added", Toast.LENGTH_SHORT).show()
+
+
         }
     }
 

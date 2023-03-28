@@ -4,21 +4,27 @@ import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.plantmate.plantmate.EditProfileActivity
 import com.plantmate.plantmate.HomeActivity
 import com.plantmate.plantmate.R
+import com.plantmate.plantmate.databinding.FragmentEntryBinding
 import com.plantmate.plantmate.databinding.FragmentSignupBinding
+import com.plantmate.plantmate.objects.FragmentUtils
+import com.plantmate.plantmate.objects.FragmentUtils.replaceFragment
 
 class FragmentSignup: Fragment(R.layout.fragment_signup)  {
     private lateinit var binding: FragmentSignupBinding
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var mContainer: ViewGroup
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,7 +32,17 @@ class FragmentSignup: Fragment(R.layout.fragment_signup)  {
         savedInstanceState: Bundle?
     ): View? {
         mAuth = FirebaseAuth.getInstance()
+        mContainer = container!!
         binding = FragmentSignupBinding.inflate(inflater)
+
+        binding.fragmentSignupTvLogin.setOnClickListener{
+            val containerHeight = mContainer.parent as ConstraintLayout
+            val setHeight = containerHeight.layoutParams
+            val fragmentView = R.id.activity_entry_fragment_view
+            setHeight.height  = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 700F, resources.displayMetrics).toInt()
+            containerHeight.layoutParams = setHeight
+            replaceFragment(FragmentLogin(), fragmentView, parentFragmentManager)
+        }
 
         binding.fragmentSignupBtnSignup.setOnClickListener{
             createUser()
@@ -49,9 +65,14 @@ class FragmentSignup: Fragment(R.layout.fragment_signup)  {
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
                         Toast.makeText(activity,"User creation successful.", Toast.LENGTH_SHORT).show()
-                        val goToLogin = Intent(activity, HomeActivity::class.java)
-                        startActivity(goToLogin)
-                        finishAffinity(requireActivity())
+
+                        val containerHeight = mContainer.parent as ConstraintLayout
+                        val setHeight = containerHeight.layoutParams
+                        val fragmentView = R.id.activity_entry_fragment_view
+                        setHeight.height  = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 700F, resources.displayMetrics).toInt()
+                        containerHeight.layoutParams = setHeight
+                        replaceFragment(FragmentLogin(), fragmentView, parentFragmentManager)
+
                     } else {
                         Log.w(ContentValues.TAG, "createUserWithEmail:failure", task.exception)
                         Toast.makeText(activity, "User creation failed.",

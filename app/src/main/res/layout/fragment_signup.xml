@@ -56,7 +56,7 @@
             android:background="@drawable/round_rectangle"
             android:ems="10"
             android:hint="john_doe@example.com"
-            android:inputType="textPersonName"
+            android:inputType="textEmailAddress"
             android:padding="10dp"
             android:textColor="@color/black" />
 
