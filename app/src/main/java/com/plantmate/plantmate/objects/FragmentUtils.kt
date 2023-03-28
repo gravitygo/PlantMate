@@ -10,4 +10,9 @@ object FragmentUtils {
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
     }
+    fun replaceFragmentInit(fragment: Fragment, container: Int, fragmentManager: FragmentManager) {
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(container, fragment)
+        fragmentTransaction.commit()
+    }
 }

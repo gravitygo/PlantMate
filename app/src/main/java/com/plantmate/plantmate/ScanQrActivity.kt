@@ -17,7 +17,9 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import com.plantmate.plantmate.databinding.ActivityScanQrBinding
 import com.plantmate.plantmate.fragments.FragmentTopNav
+import com.plantmate.plantmate.objects.FragmentUtils
 import com.plantmate.plantmate.objects.FragmentUtils.replaceFragment
+import com.plantmate.plantmate.objects.FragmentUtils.replaceFragmentInit
 import com.plantmate.plantmate.objects.FullScreenUtils.setFullScreen
 
 class ScanQrActivity : AppCompatActivity(){
@@ -38,7 +40,7 @@ class ScanQrActivity : AppCompatActivity(){
 
         // replace fragment
         val topNav = FragmentTopNav(getColor(R.color.primary))
-        replaceFragment(topNav, R.id.top_Panel, supportFragmentManager)
+        replaceFragmentInit(topNav, R.id.top_Panel, supportFragmentManager)
 
         if(ContextCompat.checkSelfPermission(
                 this@ScanQrActivity,

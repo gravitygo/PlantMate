@@ -31,15 +31,8 @@ class FragmentLogin: Fragment(R.layout.fragment_login){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         mAuth = FirebaseAuth.getInstance()
         binding = FragmentLoginBinding.inflate(inflater)
-        binding.fragmentLoginBtnLoginGoogle.setOnClickListener {
-            val intent = Intent(container!!.context, HomeActivity::class.java)
-            intent.putExtra("garden", "Chyle")
-            startActivity(intent)
-            finishAffinity(requireActivity())
-        }
 
         binding.fragmentLoginTvSignup.setOnClickListener{
             replaceFragment(FragmentSignup(), R.id.activity_entry_fragment_view, parentFragmentManager)

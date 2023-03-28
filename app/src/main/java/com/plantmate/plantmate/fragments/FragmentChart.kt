@@ -33,7 +33,7 @@ class FragmentChart : Fragment(R.layout.fragment_chart)  {
     private lateinit var btnPurchase : ConstraintLayout
     private lateinit var btnWithered : ConstraintLayout
     private lateinit var lineChart: LineChart
-
+    // TODO: Each transaction should have product_id, product_type, transaction_Type{1-4}, amount, transaction cost, transaction_net cost
     @Suppress("DEPRECATION")
     override fun onCreateView(
         inflater: LayoutInflater,

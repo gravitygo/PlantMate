@@ -10,15 +10,21 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.plantmate.plantmate.databinding.ActivityEditProfileBinding
 import com.plantmate.plantmate.fragments.FragmentTopNav
+import com.plantmate.plantmate.objects.FragmentUtils
 import com.plantmate.plantmate.objects.FragmentUtils.replaceFragment
+import com.plantmate.plantmate.objects.FragmentUtils.replaceFragmentInit
 import com.plantmate.plantmate.objects.FullScreenUtils.setFullScreen
 
 class EditProfileActivity: AppCompatActivity(){
 
     private lateinit var binding: ActivityEditProfileBinding
-
+    private lateinit var mAuth: FirebaseAuth
+    val db = Firebase.firestore
     private val textWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
         }
@@ -35,6 +41,7 @@ class EditProfileActivity: AppCompatActivity(){
     // TODO (Lind): make changes for garden name from db
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        mAuth = FirebaseAuth.getInstance()
         // set binding and full screen to remove action bar
         super.onCreate(savedInstanceState)
         binding = ActivityEditProfileBinding.inflate(layoutInflater)
@@ -48,7 +55,7 @@ class EditProfileActivity: AppCompatActivity(){
 
         // replace topNav with top nav fragment
         val topNav = FragmentTopNav(getColor(R.color.primary))
-        replaceFragment(topNav, R.id.top_Panel, supportFragmentManager)
+        replaceFragmentInit(topNav, R.id.top_Panel, supportFragmentManager)
     }
 
     private fun showConfirmationDialog() {
@@ -77,6 +84,7 @@ class EditProfileActivity: AppCompatActivity(){
         confirmButton.setOnClickListener {
             binding.confirmChangeButton.isEnabled = false
             binding.confirmChangeButton.backgroundTintList = ColorStateList.valueOf(getColor(R.color.gray))
+            db.collection("users").document("${mAuth.currentUser?.uid}").update("gardenName", "${binding.gardenNameInput.text}")
             Toast.makeText(applicationContext, "Changes saved", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }

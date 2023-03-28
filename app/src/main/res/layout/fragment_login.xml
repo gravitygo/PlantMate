@@ -85,7 +85,6 @@
             android:layout_height="54dp"
             android:adjustViewBounds="true"
             android:backgroundTint="@color/gray"
-            android:enabled="false"
             android:scaleType="centerCrop"
             android:text="Login"
             android:textColor="@color/white"

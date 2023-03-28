@@ -14,6 +14,7 @@ import androidx.appcompat.widget.AppCompatButton
 import com.plantmate.plantmate.databinding.ActivityModifyPlantBinding
 import com.plantmate.plantmate.fragments.FragmentTopNavModify
 import com.plantmate.plantmate.objects.FragmentUtils.replaceFragment
+import com.plantmate.plantmate.objects.FragmentUtils.replaceFragmentInit
 import com.plantmate.plantmate.objects.FullScreenUtils.setFullScreen
 import java.text.NumberFormat
 import java.util.*
@@ -82,7 +83,7 @@ class DisposePlantActivity: AppCompatActivity() {
 
         // replace topNav with top nav fragment
         val topNav = FragmentTopNavModify(getColor(R.color.red_primary))
-        replaceFragment(topNav, R.id.top_Panel, supportFragmentManager)
+        replaceFragmentInit(topNav, R.id.top_Panel, supportFragmentManager)
     }
 
     @SuppressLint("InflateParams")

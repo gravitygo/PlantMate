@@ -13,9 +13,14 @@ import android.widget.*
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.plantmate.plantmate.databinding.ActivityAddPlantBinding
 import com.plantmate.plantmate.fragments.FragmentTopNav
+import com.plantmate.plantmate.objects.FragmentUtils
 import com.plantmate.plantmate.objects.FragmentUtils.replaceFragment
+import com.plantmate.plantmate.objects.FragmentUtils.replaceFragmentInit
 import com.plantmate.plantmate.objects.FullScreenUtils.setFullScreen
 
 class AddPlantActivity : AppCompatActivity(){
@@ -30,7 +35,10 @@ class AddPlantActivity : AppCompatActivity(){
     // for legacy image uploads
     private lateinit var image : ImageView
 
+    val db = Firebase.firestore
+    private lateinit var mAuth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
+        mAuth = FirebaseAuth.getInstance()
         // set binding and fullscreen
         super.onCreate(savedInstanceState)
         binding = ActivityAddPlantBinding.inflate(layoutInflater)
@@ -39,7 +47,7 @@ class AddPlantActivity : AppCompatActivity(){
 
         // replace fragment
         val topNav = FragmentTopNav(getColor(R.color.primary))
-        replaceFragment(topNav, R.id.top_Panel, supportFragmentManager)
+        replaceFragmentInit(topNav, R.id.top_Panel, supportFragmentManager)
 
         // list of family types
         val items = listOf("Select Plant Family", "Cactaceae", "Araceae", "Asphodelaceae", "Rutaceae")
@@ -96,15 +104,6 @@ class AddPlantActivity : AppCompatActivity(){
                 }
             }
         }
-
-
-//        binding.stockInput.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-//            if (hasFocus) {
-//
-//            } else {
-//                Toast.makeText(applicationContext, "Lost the focus", Toast.LENGTH_LONG).show()
-//            }
-//        }
 
 
         binding.sciNameInput.addTextChangedListener(object : TextWatcher {
@@ -229,6 +228,25 @@ class AddPlantActivity : AppCompatActivity(){
 
 
         binding.confirmAddButton.setOnClickListener{
+
+            val plant = hashMapOf(
+                "plantFamily" to "${binding.actv.selectedItem}",
+                "plantCultivarName" to "${binding.cvNameInput.text}",
+                "plantScientificName" to "${binding.sciNameInput.text}",
+                "plantDescription" to "${binding.descriptionInput.text}",
+                "plantStock" to Integer.parseInt(binding.stockInput.text.toString())
+            )
+            // TODO: Put image to firebase storage
+            db.collection("users")
+                .document("${mAuth.currentUser?.uid}")
+                .collection("${binding.actv.selectedItem}")
+                .add(plant)
+                .addOnSuccessListener { documentReference ->
+                    Log.d("TAG", "DocumentSnapshot added with ID: ${documentReference.id}")
+                }
+                .addOnFailureListener { e ->
+                    Log.w("TAG", "Error adding document", e)
+                }
             binding.productImage.setImageResource(R.drawable.image_input_holder)
             binding.productInputButton.setImageResource(R.drawable.image_input_button)
             binding.sciNameInput.text.clear()

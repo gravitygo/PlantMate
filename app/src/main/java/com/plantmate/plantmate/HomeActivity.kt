@@ -8,6 +8,7 @@ import com.plantmate.plantmate.databinding.ActivityHomeBinding
 import com.plantmate.plantmate.fragments.FragmentChart
 import com.plantmate.plantmate.fragments.FragmentHome
 import com.plantmate.plantmate.objects.FragmentUtils.replaceFragment
+import com.plantmate.plantmate.objects.FragmentUtils.replaceFragmentInit
 import com.plantmate.plantmate.objects.FullScreenUtils.setFullScreen
 
 class HomeActivity : AppCompatActivity() {
@@ -38,7 +39,7 @@ class HomeActivity : AppCompatActivity() {
         val homeFragment = FragmentHome()
         val chartFragment = FragmentChart()
 
-        replaceFragment(homeFragment, R.id.activity_home_fragment_view, supportFragmentManager)
+        replaceFragmentInit(homeFragment, R.id.activity_home_fragment_view, supportFragmentManager)
 
         homeButton.setOnClickListener(){
             chartButton.setImageResource(R.drawable.chart)

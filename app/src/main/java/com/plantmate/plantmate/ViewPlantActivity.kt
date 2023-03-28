@@ -9,7 +9,9 @@ import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.plantmate.plantmate.databinding.ActivityViewPlantBinding
 import com.plantmate.plantmate.fragments.FragmentTopNav
+import com.plantmate.plantmate.objects.FragmentUtils
 import com.plantmate.plantmate.objects.FragmentUtils.replaceFragment
+import com.plantmate.plantmate.objects.FragmentUtils.replaceFragmentInit
 import com.plantmate.plantmate.objects.FullScreenUtils.setFullScreen
 
 class ViewPlantActivity: AppCompatActivity(){
@@ -29,7 +31,7 @@ class ViewPlantActivity: AppCompatActivity(){
 
         // replace fragment
         val topNav = FragmentTopNav(getColor(R.color.primary))
-        replaceFragment(topNav, R.id.top_Panel, supportFragmentManager)
+        replaceFragmentInit(topNav, R.id.top_Panel, supportFragmentManager)
     }
 
     private fun showBottomSheetDialog() {

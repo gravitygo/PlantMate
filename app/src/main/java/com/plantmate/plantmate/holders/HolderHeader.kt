@@ -2,29 +2,32 @@ package com.plantmate.plantmate.holders
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.plantmate.plantmate.MainActivity
 import com.plantmate.plantmate.R
 
 class HolderHeader (itemView: View) : RecyclerView.ViewHolder(itemView)  {
     private lateinit var mAuth: FirebaseAuth
     fun bind(header: String, activity: Activity){
-        var name:String
-        // TODO (Lind): fix garden name (pull from db)
-
-        if(header[header.length-1] =='s'|| header[header.length-1] =='S')
-            name="${header}' Garden"
-        else
-            name="${header}'s Garden"
-
+        val db = Firebase.firestore
         mAuth = FirebaseAuth.getInstance()
-
-        itemView.findViewById<TextView>(R.id.fragment_header_tv_garden_name).text = name
+        var name:String
+        db.collection("users").document("${mAuth.currentUser?.uid}")
+            .get()
+            .addOnSuccessListener { result ->
+                itemView.findViewById<TextView>(R.id.fragment_header_tv_garden_name).text = result.getString("gardenName")
+            }
+            .addOnFailureListener { exception ->
+                Log.w("TAG", "Error getting documents.", exception)
+            }
 
         itemView.findViewById<ImageButton>(R.id.fragment_header_btn_logout).setOnClickListener{
             mAuth.signOut()
