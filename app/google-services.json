@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "1093271881683",
+    "project_id": "plantmate-4a8a3",
+    "storage_bucket": "plantmate-4a8a3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1093271881683:android:246e8e793796f081c9d126",
+        "android_client_info": {
+          "package_name": "com.plantmate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1093271881683-dele8ed2o676emauqu38rv0ftath2vdn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYidhFVbzN3jKNEmg1QVcM4HyWnPHJ6PQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1093271881683-dele8ed2o676emauqu38rv0ftath2vdn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1093271881683:android:fad807b342403952c9d126",
+        "android_client_info": {
+          "package_name": "com.plantmate.plantmate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1093271881683-dele8ed2o676emauqu38rv0ftath2vdn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYidhFVbzN3jKNEmg1QVcM4HyWnPHJ6PQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1093271881683-dele8ed2o676emauqu38rv0ftath2vdn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
