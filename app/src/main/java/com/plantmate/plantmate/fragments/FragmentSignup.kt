@@ -53,7 +53,6 @@ class FragmentSignup: Fragment(R.layout.fragment_signup)  {
                         startActivity(goToLogin)
                         finishAffinity(requireActivity())
                     } else {
-                        // If sign in fails, display a message to the user.
                         Log.w(ContentValues.TAG, "createUserWithEmail:failure", task.exception)
                         Toast.makeText(activity, "User creation failed.",
                             Toast.LENGTH_SHORT).show()

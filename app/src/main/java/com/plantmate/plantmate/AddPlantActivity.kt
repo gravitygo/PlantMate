@@ -168,8 +168,6 @@ class AddPlantActivity : AppCompatActivity(){
         binding.descriptionInput.addTextChangedListener(textWatcher)
         // Registers a photo picker activity launcher in single-select mode.
         val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            // Callback is invoked after the user selects a media item or closes the
-            // photo picker.
             if (uri != null) {
                 binding.productImage.setImageURI(uri)
                 binding.productInputButton.setImageResource(R.drawable.image_remove_button)

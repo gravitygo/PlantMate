@@ -14,7 +14,6 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setFullScreen(this)
         replaceFragment(FragmentEntry(), R.id.activity_entry_fragment_view, supportFragmentManager)
     }

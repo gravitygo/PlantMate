@@ -62,7 +62,6 @@ class ViewPlantActivity: AppCompatActivity(){
             val goToDispose = Intent(this, DisposePlantActivity::class.java)
             startActivity(goToDispose)
         }
-
         dialog.show()
     }
 }
