@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/secondary"
+    tools:context=".ViewPlantActivity">
+
+    <LinearLayout
+        android:id="@+id/top_Panel"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/primary"
+        android:orientation="vertical">
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_below="@+id/top_Panel"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:fillViewport="true"
+        android:fadingEdge="none"
+        android:fitsSystemWindows="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/plant_information"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Plant Description"
+                android:textColor="@color/tertiary"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/plant_image_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tertiary"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Plant Image"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_below="@id/plant_information"/>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/image_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/plant_image_title">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:gravity="center_horizontal">
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="320dp"
+                        android:layout_height="320dp"
+                        app:cardBackgroundColor="@color/primary"
+                        app:cardCornerRadius="15dp">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="309dp"
+                            android:layout_height="309dp"
+                            android:layout_gravity="center"
+                            app:cardCornerRadius="20dp">
+
+                            <ImageView
+                                android:id="@+id/product_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="307dp"
+                                android:src="@drawable/image_input_holder"
+                                android:layout_gravity="center"
+                                android:scaleType="fitXY"
+                                />
+
+                            <ImageView
+                                android:id="@+id/product_input_button"
+                                android:layout_width="match_parent"
+                                android:layout_height="65dp"
+                                android:src="@drawable/image_input_button"
+                                android:layout_gravity="bottom"
+                                android:scaleType="fitXY"
+                                />
+
+                        </androidx.cardview.widget.CardView>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/sci_name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tertiary"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
+                android:text="Scientific Name"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_below="@id/image_layout"/>
+
+            <EditText
+                android:id="@+id/sci_name_input"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_below="@+id/sci_name_title"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:maxLines="1"
+                android:background="@drawable/input_text"
+                />
+
+            <TextView
+                android:id="@+id/cv_name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tertiary"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
+                android:text="Cultivar Name"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_below="@+id/sci_name_input"/>
+
+            <EditText
+                android:id="@+id/cv_name_input"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_below="@+id/cv_name_title"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:maxLines="1"
+                android:background="@drawable/input_text"
+                />
+
+            <TextView
+                android:id="@+id/family_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tertiary"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
+                android:text="Plant Family"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_below="@+id/cv_name_input"/>
+
+
+            <Spinner
+                android:id="@+id/actv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:background="@drawable/input_text"
+                android:textColor="@color/black"
+                android:layout_below="@+id/family_title"
+                android:overlapAnchor="false"/>
+
+            <TextView
+                android:id="@+id/stock_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tertiary"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
+                android:text="Plant Stock"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_below="@+id/actv"/>
+
+            <EditText
+                android:id="@+id/stock_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/stock_title"
+                android:background="@drawable/input_text"
+                android:textColor="@color/black"
+                android:maxLines="1"
+                android:inputType="number"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/desc_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tertiary"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
+                android:text="Plant Description"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_below="@+id/stock_input"/>
+
+
+
+            <RelativeLayout
+                android:id="@+id/desc_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_below="@+id/desc_title">
+
+                <EditText
+                    android:id="@+id/description_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="25dp"
+                    android:background="@drawable/input_text"
+                    android:maxLength="500"/>
+                <TextView
+                    android:id="@+id/description_input_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/description_input"
+                    android:layout_alignRight="@+id/description_input"
+                    android:layout_margin="5dp"
+                    android:textColor="@color/gray"
+                    android:textSize="16sp"
+                    android:text="0/500"/>
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/confirm_add_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/desc_layout"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/round_rectangle"
+                android:backgroundTint="@color/gray"
+                android:text="Add Product"
+                android:textAllCaps="false"
+                android:textColor="@color/secondary"
+                android:enabled="false"
+                android:textSize="16sp" />
+
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

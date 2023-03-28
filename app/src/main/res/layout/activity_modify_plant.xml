@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/secondary"
+    tools:context=".ViewPlantActivity">
+
+    <LinearLayout
+        android:id="@+id/top_Panel"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/primary"
+        android:orientation="vertical"/>
+
+    <RelativeLayout
+        android:id="@+id/main_Panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/secondary"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        app:layout_constraintTop_toBottomOf="@+id/top_Panel"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/image_Layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                app:cardBackgroundColor="@color/primary"
+                app:cardCornerRadius="180dp">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="240dp"
+                    android:layout_height="240dp"
+                    android:layout_gravity="center"
+                    app:cardBackgroundColor="@color/secondary"
+                    app:cardCornerRadius="180dp">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="230dp"
+                        android:layout_height="230dp"
+                        android:layout_gravity="center"
+                        app:cardCornerRadius="180dp">
+
+                        <ImageView
+                            android:id="@+id/product_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="220dp"
+                            android:src="@drawable/plant"
+                            android:layout_gravity="center"
+                            android:scaleType="fitXY"
+                            />
+
+                    </androidx.cardview.widget.CardView>
+                </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/sci_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/image_Layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:text="Aloe Barbadensis Miller"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="180dp" />
+
+        <TextView
+            android:id="@+id/cv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sci_name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="25dp"
+            android:text="PV108 “Super Blue”"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            tools:layout_editor_absoluteX="180dp" />
+
+        <TextView
+            android:id="@+id/stock_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cv_name"
+            android:text="Sold Stocks:"
+            android:textColor="@color/primary"
+            android:textSize="13sp"
+            android:textStyle="bold"/>
+
+
+        <EditText
+            android:id="@+id/stock_input"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:padding="5dp"
+            android:textSize="25dp"
+            android:hint="input stock"
+            android:textColorHint="@color/gray"
+            android:inputType="number"
+            android:textColor="@color/black"
+            android:background="@drawable/sell_input_box"
+            android:layout_below="@id/stock_text"
+            />
+
+
+        <TextView
+            android:id="@+id/price_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/stock_input"
+            android:text="Price Sold (php):"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/primary"
+            android:textSize="13sp"
+            android:textStyle="bold"/>
+
+
+        <EditText
+            android:id="@+id/price_input"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:padding="5dp"
+            android:textSize="25dp"
+            android:hint="input price"
+            android:textColorHint="@color/gray"
+            android:inputType="numberDecimal"
+            android:textColor="@color/black"
+            android:background="@drawable/sell_input_box"
+            android:layout_below="@+id/price_text"
+            />
+
+        <View
+            android:id="@+id/horizontal_Rule"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@color/gray"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@+id/price_input"
+            />
+
+        <TextView
+            android:id="@+id/total_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/horizontal_Rule"
+            android:layout_alignRight="@+id/horizontal_Rule"
+            android:text="Sale Total:"
+            android:textColor="@color/primary"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/total_title"
+            android:layout_alignRight="@+id/horizontal_Rule"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/total_php"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Php"
+                android:textColor="@color/primary"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/total_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/total_title"
+                android:text="0.00"
+                android:textColor="@color/primary"
+                android:textSize="49sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/confirm_modify_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:enabled="false"
+            android:background="@drawable/round_rectangle"
+            android:backgroundTint="@color/primary"
+            android:text="Sell"
+            android:textAllCaps="false"
+            android:textColor="@color/secondary"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+</LinearLayout>

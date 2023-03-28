@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/dialog_box"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="260dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/sell_input_box"
+    android:padding="2dp">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Confirm Changes"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary"
+        android:gravity="center" />
+    <TextView
+        android:id="@+id/dialog_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="you are about to ..."
+        android:layout_below="@id/dialog_title"
+        android:layout_marginTop="16dp"
+        android:textSize="16sp"
+        android:textColor="@color/gray"
+        android:textAlignment="center" />
+
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@id/dialog_message"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/dialog_cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cancel"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:background="@drawable/cancel_button"
+            android:backgroundTint="@color/gray"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/dialog_confirm_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="confirm"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:layout_weight="1"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/confirm_button"
+            android:backgroundTint="@color/primary"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>
