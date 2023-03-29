@@ -113,8 +113,15 @@ class FragmentSignup: Fragment(R.layout.fragment_signup)  {
                     if (task.isSuccessful) {
                         Toast.makeText(activity,"Sign up successful.", Toast.LENGTH_SHORT).show()
                         val user = db.collection("users").document("${mAuth.uid}")
+                        val categoryData = hashMapOf(
+                            "Cactaceae" to false,
+                            "Araceae" to false,
+                            "Asphodelaceae" to false,
+                            "Rutaceae" to false
+                        )
                         val userData = hashMapOf(
-                            "gardenName" to garden
+                            "gardenName" to garden,
+                            "categoryData" to categoryData
                         )
                         user.set(userData)
                             .addOnSuccessListener { documentReference ->
