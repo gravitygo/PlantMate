@@ -10,7 +10,7 @@ import com.plantmate.plantmate.fragments.FragmentEntry
 import com.plantmate.plantmate.objects.FullScreenUtils.setFullScreen
 import com.plantmate.plantmate.objects.FragmentUtils.replaceFragment
 import com.plantmate.plantmate.objects.FragmentUtils.replaceFragmentInit
-
+//TODO: FINAL(Remove all the log and replace them as toast where needed**very important)
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
