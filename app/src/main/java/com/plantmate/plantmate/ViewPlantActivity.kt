@@ -1,16 +1,14 @@
 package com.plantmate.plantmate
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.plantmate.plantmate.databinding.ActivityViewPlantBinding
 import com.plantmate.plantmate.fragments.FragmentTopNav
-import com.plantmate.plantmate.objects.FragmentUtils
-import com.plantmate.plantmate.objects.FragmentUtils.replaceFragment
 import com.plantmate.plantmate.objects.FragmentUtils.replaceFragmentInit
 import com.plantmate.plantmate.objects.FullScreenUtils.setFullScreen
 
@@ -18,6 +16,8 @@ class ViewPlantActivity: AppCompatActivity(){
 
     private lateinit var binding: ActivityViewPlantBinding
     override fun onCreate(savedInstanceState: Bundle?) {
+        //TODO: REMOVE THIS BUT THIS IS FOR LOGGING PURPOSES
+        Log.d("Hi", "${intent.getStringExtra("Hi")}")
         // set binding and fullscreen
         super.onCreate(savedInstanceState)
         binding = ActivityViewPlantBinding.inflate(layoutInflater)
@@ -34,6 +34,7 @@ class ViewPlantActivity: AppCompatActivity(){
         replaceFragmentInit(topNav, R.id.top_Panel, supportFragmentManager)
     }
 
+    @SuppressLint("InflateParams")
     private fun showBottomSheetDialog() {
         // create bottomSheetDialog instance and set view
         val dialog = BottomSheetDialog(this, R.style.AppBottomSheetDialogTheme)
