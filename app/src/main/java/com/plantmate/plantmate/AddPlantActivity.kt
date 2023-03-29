@@ -2,8 +2,11 @@ package com.plantmate.plantmate
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.ContentResolver
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.media.Image
+import android.net.Uri
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.os.Build
@@ -14,6 +17,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
 import android.widget.*
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -27,10 +31,9 @@ import com.github.sumimakito.awesomeqr.option.color.Color
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.plantmate.plantmate.databinding.ActivityAddPlantBinding
 import com.plantmate.plantmate.fragments.FragmentTopNav
-import com.plantmate.plantmate.objects.FragmentUtils
-import com.plantmate.plantmate.objects.FragmentUtils.replaceFragment
 import com.plantmate.plantmate.objects.FragmentUtils.replaceFragmentInit
 import com.plantmate.plantmate.objects.FullScreenUtils.setFullScreen
 import java.io.File
@@ -50,6 +53,9 @@ class AddPlantActivity : AppCompatActivity(){
 
     val db = Firebase.firestore
     private lateinit var mAuth: FirebaseAuth
+    private val storage = FirebaseStorage.getInstance()
+    val storageRef = storage.reference
+    private lateinit var imageUri: Uri
     override fun onCreate(savedInstanceState: Bundle?) {
         mAuth = FirebaseAuth.getInstance()
         // set binding and fullscreen
@@ -182,6 +188,7 @@ class AddPlantActivity : AppCompatActivity(){
         val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
                 binding.productImage.setImageURI(uri)
+                imageUri =  uri
                 binding.productInputButton.setImageResource(R.drawable.image_remove_button)
                 imageUploaded = true
             } else {
@@ -239,12 +246,18 @@ class AddPlantActivity : AppCompatActivity(){
 
         binding.confirmAddButton.setOnClickListener{
 
+
+            val cR: ContentResolver = this.contentResolver
+            val mime: MimeTypeMap = MimeTypeMap.getSingleton()
+            val type: String? = mime.getExtensionFromMimeType(cR.getType(imageUri))
+
             val plant = hashMapOf(
                 "plantFamily" to "${binding.actv.selectedItem}",
                 "plantCultivarName" to "${binding.cvNameInput.text}",
                 "plantScientificName" to "${binding.sciNameInput.text}",
                 "plantDescription" to "${binding.descriptionInput.text}",
-                "plantStock" to Integer.parseInt(binding.stockInput.text.toString())
+                "plantStock" to Integer.parseInt(binding.stockInput.text.toString()),
+                "imageType" to "$type"
             )
             // TODO: Put image to firebase storage
             db.collection("users")
@@ -284,10 +297,18 @@ class AddPlantActivity : AppCompatActivity(){
                     })
 
 
+                    val fileRef = storageRef.child("${mAuth.currentUser?.uid}/${documentReference.id}.${type}")
+                    fileRef.putFile(imageUri).addOnSuccessListener{
+                        Log.w("TAG", "Success Adding")
+                    }.addOnFailureListener{
+                        Log.w("TAG", "Failed Adding")
+                    }
                 }
                 .addOnFailureListener { e ->
                     Log.w("TAG", "Error adding document", e)
                 }
+
+
             binding.productImage.setImageResource(R.drawable.image_input_holder)
             binding.productInputButton.setImageResource(R.drawable.image_input_button)
             binding.sciNameInput.text.clear()
