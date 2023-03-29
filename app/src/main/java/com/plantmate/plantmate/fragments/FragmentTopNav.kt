@@ -2,6 +2,7 @@ package com.plantmate.plantmate.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,10 +26,7 @@ class FragmentTopNav(val color: Int): Fragment(R.layout.fragment_top_nav){
 
 
         binding.backButton.setOnClickListener{
-
-            val goToHome = Intent(container!!.context, HomeActivity::class.java)
-            startActivity(goToHome)
-
+            requireActivity().finish()
         }
         return binding.root
     }
