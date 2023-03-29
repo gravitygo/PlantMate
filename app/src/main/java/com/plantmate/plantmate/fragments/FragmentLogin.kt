@@ -79,12 +79,13 @@ class FragmentLogin: Fragment(R.layout.fragment_login){
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
                     val user = mAuth.currentUser
-                    val goToLogin = Intent(activity, HomeActivity::class.java)
-                    startActivity(goToLogin)
+                    val goToHome = Intent(activity, HomeActivity::class.java)
+                    startActivity(goToHome)
                     finishAffinity(requireActivity())
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
+                    binding.fragmentLoginEtPassword.text.clear()
                     Toast.makeText(activity, "Login failed.", Toast.LENGTH_SHORT).show()
                 }
             }

@@ -1,10 +1,12 @@
 package com.plantmate.plantmate
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -41,12 +43,23 @@ class EditProfileActivity: AppCompatActivity(){
     // TODO (Lind): make changes for garden name from db
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mAuth = FirebaseAuth.getInstance()
         // set binding and full screen to remove action bar
         super.onCreate(savedInstanceState)
         binding = ActivityEditProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setFullScreen(this)
+
+        mAuth = FirebaseAuth.getInstance()
+        val db = Firebase.firestore
+
+        db.collection("users").document("${mAuth.currentUser?.uid}")
+            .get()
+            .addOnSuccessListener { result ->
+                binding.gardenNameInput.setText(result.getString("gardenName"))
+            }
+            .addOnFailureListener { exception ->
+                Log.w("TAG", "Error getting documents.", exception)
+            }
 
         binding.gardenNameInput.addTextChangedListener(textWatcher)
         binding.confirmChangeButton.setOnClickListener{

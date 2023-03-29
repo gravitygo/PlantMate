@@ -19,7 +19,7 @@ class HolderHeader (itemView: View) : RecyclerView.ViewHolder(itemView)  {
     fun bind(header: String, activity: Activity){
         val db = Firebase.firestore
         mAuth = FirebaseAuth.getInstance()
-        var name:String
+
         db.collection("users").document("${mAuth.currentUser?.uid}")
             .get()
             .addOnSuccessListener { result ->

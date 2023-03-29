@@ -30,7 +30,7 @@ import com.plantmate.plantmate.objects.FragmentUtils.replaceFragment
 class FragmentSignup: Fragment(R.layout.fragment_signup)  {
     private lateinit var binding: FragmentSignupBinding
     private lateinit var mAuth: FirebaseAuth
-    val db = Firebase.firestore
+    private val db = Firebase.firestore
     private lateinit var mContainer: ViewGroup
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -105,6 +105,8 @@ class FragmentSignup: Fragment(R.layout.fragment_signup)  {
     private fun createUser(){
         val email = binding.fragmentSignupEtEmail.text.toString()
         val password = binding.fragmentSignupEtPassword.text.toString()
+        val garden = binding.fragmentSignupEtGarden.text.toString()
+
         if(passwordsMatch() && passwordsLongEnough()){
             mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(requireActivity()) { task ->
@@ -112,7 +114,7 @@ class FragmentSignup: Fragment(R.layout.fragment_signup)  {
                         Toast.makeText(activity,"Sign up successful.", Toast.LENGTH_SHORT).show()
                         val user = db.collection("users").document("${mAuth.uid}")
                         val userData = hashMapOf(
-                            "gardenName" to "${binding.fragmentSignupEtGarden.text}"
+                            "gardenName" to garden
                         )
                         user.set(userData)
                             .addOnSuccessListener { documentReference ->
