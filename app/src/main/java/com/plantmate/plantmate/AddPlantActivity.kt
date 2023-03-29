@@ -287,7 +287,6 @@ class AddPlantActivity : AppCompatActivity(){
                         // Oops, something gone wrong.
                     })
 
-
                     val fileRef = storageRef.child("${mAuth.currentUser?.uid}/${documentReference.id}.${type}")
                     fileRef.putFile(imageUri).addOnSuccessListener{
                         Log.w("TAG", "Success Adding")
