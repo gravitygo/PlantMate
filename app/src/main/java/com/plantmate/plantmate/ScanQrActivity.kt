@@ -3,6 +3,7 @@ package com.plantmate.plantmate
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.util.SparseArray
@@ -18,6 +19,7 @@ import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.plantmate.plantmate.databinding.ActivityScanQrBinding
@@ -33,6 +35,7 @@ class ScanQrActivity : AppCompatActivity(){
     private lateinit var cameraSource: CameraSource
     private lateinit var mAuth: FirebaseAuth
     private var detector: BarcodeDetector? = null
+    private lateinit var db: FirebaseFirestore
 
     override fun onResume() {
         super.onResume()
@@ -46,7 +49,7 @@ class ScanQrActivity : AppCompatActivity(){
         setFullScreen(this)
 
         mAuth = FirebaseAuth.getInstance()
-
+        db = Firebase.firestore
         // replace fragment
         val topNav = FragmentTopNav(getColor(R.color.primary))
         replaceFragmentInit(topNav, R.id.top_Panel, supportFragmentManager)
@@ -134,39 +137,33 @@ class ScanQrActivity : AppCompatActivity(){
 
         override fun receiveDetections(detections: Detector.Detections<Barcode>?) {
             if (detections != null && detections.detectedItems.isNotEmpty()){
-                val codeContent = detections.detectedItems.valueAt(0).displayValue
-                val db = Firebase.firestore
-                val collectionList = listOf("Araceae", "Asphodelaceae", "Cactaceae", "Rutaceae")
-                for (col in collectionList) {
-                    db.collection("users").document("${mAuth.currentUser?.uid}").collection(col).document(codeContent).get()
+                    val codeContent = detections.detectedItems.valueAt(0).displayValue
+//                val collectionList = listOf("Araceae", "Asphodelaceae", "Cactaceae", "Rutaceae")
+//                for (col in collectionList) {
+//                    db.collection("users").document("${mAuth.currentUser?.uid}").collection(col).document(codeContent).get()
+                    db.collection("users").document("${mAuth.currentUser?.uid}").collection("collection")
+                        .document(codeContent).get()
                         .addOnSuccessListener { result ->
-                            cameraSource.stop()
-                            binding.textScanResult.setBackgroundResource(R.color.red_primary)
-
-                            var pf = result.getString("plantFamily").toString()
-
-                            Log.d("DENZZZZZZZZZZZZZZZZZZZZZZ", pf)
-                            binding.textScanResult.setOnClickListener{
-                                db.collection("users").document("${mAuth.currentUser?.uid}")
-                                    .collection(col).document(codeContent).get()
-                                    .addOnSuccessListener { result2 ->
+                            binding.scanButton.isEnabled =true
+                            binding.scanButton.text = "Click to visit plant page"
+                            binding.scanButton.backgroundTintList = ColorStateList.valueOf(getColor(R.color.jungle_green))
+//                            Log.d("DENZZZZZZZZZZZZZZZZZZZZZZ", result.id)
+                            binding.scanButton.setOnClickListener{
                                         cameraSource.stop()
-                                        pf = result2.getString("plantFamily").toString()
                                         val goToPlant = Intent(applicationContext, ViewPlantActivity::class.java)
                                         goToPlant.putExtra("plantID", result.id)
-                                        goToPlant.putExtra("plantFam", pf)
                                         Log.d("inside plant id val",  result.id)
-                                        Log.d("inside direct pf call", pf)
                                         startActivity(goToPlant)
                                         finish()
-                                    } .addOnFailureListener { exception ->
-                                        Log.w("SCAN QR", "QR code invalid.", exception)
-                                    }
                             }
                         } .addOnFailureListener { exception ->
+                            binding.scanButton.isEnabled = false
+                            binding.scanButton.backgroundTintList = ColorStateList.valueOf(getColor(R.color.gray))
                             Log.w("SCAN QR", "QR code invalid.", exception)
                         }
-                }
+
+
+//                }
             }
         }
     }

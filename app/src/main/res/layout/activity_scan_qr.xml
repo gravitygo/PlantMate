@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/top_Panel"
-        app:layout_constraintBottom_toTopOf="@id/textScanResult">
+        app:layout_constraintBottom_toTopOf="@id/scan_field">
 
         <SurfaceView
             android:id="@+id/cameraSurfaceView"
@@ -37,14 +37,28 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/textScanResult"
+    <LinearLayout
+        android:id="@+id/scan_field"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
         android:textSize="20sp"
         android:paddingLeft="5dp"
         android:background="@color/primary"
-        android:textColor="@color/secondary"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/scan_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:enabled="false"
+            android:text="No valid QR detected"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            android:textColor="@color/secondary"
+            android:background="@drawable/round_rectangle"
+            android:backgroundTint="@color/gray"/>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
