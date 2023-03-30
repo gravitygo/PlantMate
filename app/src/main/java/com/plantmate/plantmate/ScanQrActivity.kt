@@ -1,6 +1,7 @@
 package com.plantmate.plantmate
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.SparseArray
@@ -17,18 +18,21 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import com.plantmate.plantmate.databinding.ActivityScanQrBinding
 import com.plantmate.plantmate.fragments.FragmentTopNav
-import com.plantmate.plantmate.objects.FragmentUtils
-import com.plantmate.plantmate.objects.FragmentUtils.replaceFragment
 import com.plantmate.plantmate.objects.FragmentUtils.replaceFragmentInit
 import com.plantmate.plantmate.objects.FullScreenUtils.setFullScreen
 
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class ScanQrActivity : AppCompatActivity(){
 
     private lateinit var binding: ActivityScanQrBinding
     private val requestCodeCameraPermission = 1001
     private lateinit var cameraSource: CameraSource
-    private lateinit var detector: BarcodeDetector
+    private var detector: BarcodeDetector? = null
 
+    override fun onResume() {
+        super.onResume()
+        detector?.setProcessor(processor)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         // set binding and fullscreen
 
@@ -44,7 +48,7 @@ class ScanQrActivity : AppCompatActivity(){
 
         if(ContextCompat.checkSelfPermission(
                 this@ScanQrActivity,
-                android.Manifest.permission.CAMERA
+                Manifest.permission.CAMERA
             ) != PackageManager.PERMISSION_DENIED
         ) {
             askForCameraPermission()
@@ -58,18 +62,18 @@ class ScanQrActivity : AppCompatActivity(){
     private fun setupControls() {
         binding.cameraSurfaceView.visibility = View.VISIBLE
         detector = BarcodeDetector.Builder(this@ScanQrActivity).build()
-        cameraSource = CameraSource.Builder(this@ScanQrActivity, detector)
+        cameraSource = CameraSource.Builder(this@ScanQrActivity, detector!!)
             .setAutoFocusEnabled(true)
             .build()
         binding.cameraSurfaceView.holder.addCallback(surfaceCallBack)
-        detector.setProcessor(processor)
+        detector!!.setProcessor(processor)
     }
 
     private fun askForCameraPermission(){
         binding.cameraSurfaceView.visibility = View.GONE
         ActivityCompat.requestPermissions(
             this@ScanQrActivity,
-            arrayOf(android.Manifest.permission.CAMERA),
+            arrayOf(Manifest.permission.CAMERA),
             requestCodeCameraPermission
         )
     }
@@ -84,7 +88,7 @@ class ScanQrActivity : AppCompatActivity(){
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 setupControls()
             } else{
-                Toast.makeText(applicationContext, "Camera Permissions Denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(applicationContext, "Camera Permissions Denied", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -123,11 +127,15 @@ class ScanQrActivity : AppCompatActivity(){
         override fun release() {
         }
 
-        override fun receiveDetections(detections: Detector.Detections<Barcode>?) {
-            if (detections != null && detections.detectedItems.isNotEmpty()){
+        override fun receiveDetections(detections: Detector.Detections<Barcode>) {
+            if (detections.detectedItems.isNotEmpty()){
                 val qrCodes: SparseArray<Barcode> = detections.detectedItems
                 val code = qrCodes.valueAt(0)
-                binding.textScanResult.text = code.displayValue
+
+                detector!!.setProcessor(null)
+                val intent = Intent(binding.root.context, ViewPlantActivity::class.java)
+                intent.putExtra("Hi", code.displayValue)
+                startActivity(intent)
             } else {
                 binding.textScanResult.text = ""
             }
