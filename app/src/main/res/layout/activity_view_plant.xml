@@ -41,12 +41,10 @@
                     android:id="@+id/product_Image"
                     android:layout_width="match_parent"
                     android:layout_height="360dp"
-                    android:src="@drawable/plant"
-                    android:layout_centerHorizontal="true"
-                    app:layout_constraintDimensionRatio="1:1"
                     android:layout_alignParentTop="true"
+                    android:layout_marginTop="0dp"
                     android:scaleType="fitXY"
-                    />
+                    app:layout_constraintDimensionRatio="1:1" />
 
                 <GridLayout
                     android:id="@+id/grid_Layout"
