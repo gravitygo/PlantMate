@@ -2,6 +2,7 @@ package com.plantmate.plantmate
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
@@ -99,6 +100,8 @@ class EditProfileActivity: AppCompatActivity(){
             binding.confirmChangeButton.backgroundTintList = ColorStateList.valueOf(getColor(R.color.gray))
             db.collection("users").document("${mAuth.currentUser?.uid}").update("gardenName", "${binding.gardenNameInput.text}")
             Toast.makeText(applicationContext, "Changes saved", Toast.LENGTH_SHORT).show()
+            val goToHome = Intent(this, HomeActivity::class.java)
+            startActivity(goToHome)
             dialog.dismiss()
         }
 
