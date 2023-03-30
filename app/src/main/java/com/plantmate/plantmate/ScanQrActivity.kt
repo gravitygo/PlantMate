@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.util.SparseArray
 import android.view.SurfaceHolder
 import android.view.View
@@ -16,6 +17,9 @@ import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.plantmate.plantmate.databinding.ActivityScanQrBinding
 import com.plantmate.plantmate.fragments.FragmentTopNav
 import com.plantmate.plantmate.objects.FragmentUtils.replaceFragmentInit
@@ -27,6 +31,7 @@ class ScanQrActivity : AppCompatActivity(){
     private lateinit var binding: ActivityScanQrBinding
     private val requestCodeCameraPermission = 1001
     private lateinit var cameraSource: CameraSource
+    private lateinit var mAuth: FirebaseAuth
     private var detector: BarcodeDetector? = null
 
     override fun onResume() {
@@ -35,12 +40,12 @@ class ScanQrActivity : AppCompatActivity(){
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         // set binding and fullscreen
-
-
         super.onCreate(savedInstanceState)
         binding = ActivityScanQrBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setFullScreen(this)
+
+        mAuth = FirebaseAuth.getInstance()
 
         // replace fragment
         val topNav = FragmentTopNav(getColor(R.color.primary))
@@ -88,7 +93,7 @@ class ScanQrActivity : AppCompatActivity(){
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 setupControls()
             } else{
-                Toast.makeText(applicationContext, "Camera Permissions Denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Camera Permissions Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -127,19 +132,42 @@ class ScanQrActivity : AppCompatActivity(){
         override fun release() {
         }
 
-        override fun receiveDetections(detections: Detector.Detections<Barcode>) {
-            if (detections.detectedItems.isNotEmpty()){
-                val qrCodes: SparseArray<Barcode> = detections.detectedItems
-                val code = qrCodes.valueAt(0)
+        override fun receiveDetections(detections: Detector.Detections<Barcode>?) {
+            if (detections != null && detections.detectedItems.isNotEmpty()){
+                val codeContent = detections.detectedItems.valueAt(0).displayValue
+                val db = Firebase.firestore
+                val collectionList = listOf("Araceae", "Asphodelaceae", "Cactaceae", "Rutaceae")
+                for (col in collectionList) {
+                    db.collection("users").document("${mAuth.currentUser?.uid}").collection(col).document(codeContent).get()
+                        .addOnSuccessListener { result ->
+                            cameraSource.stop()
+                            binding.textScanResult.setBackgroundResource(R.color.red_primary)
 
-                detector!!.setProcessor(null)
-                val intent = Intent(binding.root.context, ViewPlantActivity::class.java)
-                intent.putExtra("Hi", code.displayValue)
-                startActivity(intent)
-            } else {
-                binding.textScanResult.text = ""
+                            var pf = result.getString("plantFamily").toString()
+
+                            Log.d("DENZZZZZZZZZZZZZZZZZZZZZZ", pf)
+                            binding.textScanResult.setOnClickListener{
+                                db.collection("users").document("${mAuth.currentUser?.uid}")
+                                    .collection(col).document(codeContent).get()
+                                    .addOnSuccessListener { result2 ->
+                                        cameraSource.stop()
+                                        pf = result2.getString("plantFamily").toString()
+                                        val goToPlant = Intent(applicationContext, ViewPlantActivity::class.java)
+                                        goToPlant.putExtra("plantID", result.id)
+                                        goToPlant.putExtra("plantFam", pf)
+                                        Log.d("inside plant id val",  result.id)
+                                        Log.d("inside direct pf call", pf)
+                                        startActivity(goToPlant)
+                                        finish()
+                                    } .addOnFailureListener { exception ->
+                                        Log.w("SCAN QR", "QR code invalid.", exception)
+                                    }
+                            }
+                        } .addOnFailureListener { exception ->
+                            Log.w("SCAN QR", "QR code invalid.", exception)
+                        }
+                }
             }
         }
-
     }
 }

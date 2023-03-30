@@ -42,6 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:textSize="20sp"
+        android:paddingLeft="5dp"
         android:background="@color/primary"
         android:textColor="@color/secondary"
         app:layout_constraintBottom_toBottomOf="parent"/>
