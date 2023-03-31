@@ -1,12 +1,16 @@
 package com.plantmate.plantmate.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.plantmate.plantmate.DAO.DataHelper
 import com.plantmate.plantmate.R
 import com.plantmate.plantmate.adapters.AdapterHome

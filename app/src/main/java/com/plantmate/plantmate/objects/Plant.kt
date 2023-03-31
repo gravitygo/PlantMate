@@ -1,7 +1,7 @@
 package com.plantmate.plantmate.objects
 
 class Plant(
-    val plantId: Int,
+    val plantId: String,
     val plantFamily: String,
     val plantCultivarName: String,
     val plantScientificName: String,

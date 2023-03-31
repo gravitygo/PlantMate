@@ -138,16 +138,12 @@ class ScanQrActivity : AppCompatActivity(){
         override fun receiveDetections(detections: Detector.Detections<Barcode>?) {
             if (detections != null && detections.detectedItems.isNotEmpty()){
                     val codeContent = detections.detectedItems.valueAt(0).displayValue
-//                val collectionList = listOf("Araceae", "Asphodelaceae", "Cactaceae", "Rutaceae")
-//                for (col in collectionList) {
-//                    db.collection("users").document("${mAuth.currentUser?.uid}").collection(col).document(codeContent).get()
                     db.collection("users").document("${mAuth.currentUser?.uid}").collection("collection")
                         .document(codeContent).get()
                         .addOnSuccessListener { result ->
                             binding.scanButton.isEnabled =true
                             binding.scanButton.text = "Click to visit plant page"
                             binding.scanButton.backgroundTintList = ColorStateList.valueOf(getColor(R.color.jungle_green))
-//                            Log.d("DENZZZZZZZZZZZZZZZZZZZZZZ", result.id)
                             binding.scanButton.setOnClickListener{
                                         cameraSource.stop()
                                         val goToPlant = Intent(applicationContext, ViewPlantActivity::class.java)
@@ -164,6 +160,7 @@ class ScanQrActivity : AppCompatActivity(){
 
 
 //                }
+
             }
         }
     }
