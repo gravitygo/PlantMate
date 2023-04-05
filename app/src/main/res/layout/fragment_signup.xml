@@ -146,7 +146,7 @@
             android:adjustViewBounds="true"
             android:backgroundTint="@color/white"
             android:scaleType="centerCrop"
-            android:text="Sign up with Google"
+            android:text="Sign in with Google"
             android:textColor="@color/jungle_green"
             app:cornerRadius="5dp"
             app:strokeColor="@color/jungle_green"

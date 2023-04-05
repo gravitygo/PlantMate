@@ -31,7 +31,6 @@ class FragmentEntry: Fragment(R.layout.fragment_entry) {
         binding.fragmentEntryLogin.setOnClickListener {
             setHeight.height  = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 700F, resources.displayMetrics).toInt()
             containerHeight.layoutParams = setHeight
-
             replaceFragment(FragmentLogin(), fragmentView, parentFragmentManager)
         }
         binding.fragmentEntrySignUp.setOnClickListener {

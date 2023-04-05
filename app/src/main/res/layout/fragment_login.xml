@@ -87,6 +87,7 @@
             android:backgroundTint="@color/gray"
             android:scaleType="centerCrop"
             android:text="Login"
+            android:enabled="false"
             android:textColor="@color/white"
             app:cornerRadius="5dp" />
 
@@ -126,7 +127,7 @@
             android:adjustViewBounds="true"
             android:backgroundTint="@color/white"
             android:scaleType="centerCrop"
-            android:text="Login with Google"
+            android:text="Sign in with Google"
             android:textColor="@color/jungle_green"
             app:cornerRadius="5dp"
             app:strokeColor="@color/jungle_green"

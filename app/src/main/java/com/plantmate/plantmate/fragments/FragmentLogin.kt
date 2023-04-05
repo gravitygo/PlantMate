@@ -1,5 +1,6 @@
 package com.plantmate.plantmate.fragments
 
+import android.app.Activity
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -12,9 +13,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.fragment.app.Fragment
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.plantmate.plantmate.R
 import com.plantmate.plantmate.databinding.FragmentLoginBinding
 import com.plantmate.plantmate.HomeActivity
@@ -25,6 +38,7 @@ class FragmentLogin: Fragment(R.layout.fragment_login){
 
     private lateinit var binding : FragmentLoginBinding
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,15 +52,97 @@ class FragmentLogin: Fragment(R.layout.fragment_login){
             replaceFragment(FragmentSignup(), R.id.activity_entry_fragment_view, parentFragmentManager)
         }
 
+        binding.fragmentLoginBtnLoginGoogle.setOnClickListener{
+            loginUserWithGoogle()
+        }
+
         binding.fragmentLoginBtnLogin.setOnClickListener{
             loginUser()
         }
+
+        mAuth = FirebaseAuth.getInstance()
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("1093271881683-nd8eram56ihco16th0cf0ao51qtogeqn.apps.googleusercontent.com")
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
         binding.fragmentLoginEtEmail.addTextChangedListener(textWatcher)
         binding.fragmentLoginEtPassword.addTextChangedListener(textWatcher)
 
         return binding.root
     }
+
+    private fun loginUserWithGoogle(){
+        val signInIntent = googleSignInClient.signInIntent
+        launcher.launch(signInIntent)
+    }
+
+    private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            result ->
+                if (result.resultCode == Activity.RESULT_OK){
+                    val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                    handleResults(task)
+                } else{
+                    Toast.makeText(requireActivity(), Activity.RESULT_OK, Toast.LENGTH_SHORT).show()
+                }
+    }
+
+    private fun handleResults(task: Task<GoogleSignInAccount>){
+        if(task.isSuccessful){
+            val account : GoogleSignInAccount? = task.result
+            if (account != null){
+                updateUI(account)
+            }
+        } else{
+            Log.d("HANDLE RESULTS", task.exception.toString())
+            Toast.makeText(requireActivity(), task.exception.toString(), Toast.LENGTH_SHORT).show()
+        }
+    }
+    private fun updateUI(account: GoogleSignInAccount){
+        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+        mAuth.signInWithCredential(credential).addOnCompleteListener{
+            if(it.isSuccessful){
+                val db = Firebase.firestore
+                db.collection("users").document("${mAuth.currentUser?.uid}")
+                    .get()
+                    .addOnSuccessListener { result ->
+                        if(result.getString("gardenName") == null){
+                            val user = db.collection("users").document("${mAuth.uid}")
+                            val categoryData = hashMapOf(
+                                "Cactaceae" to false,
+                                "Araceae" to false,
+                                "Asphodelaceae" to false,
+                                "Rutaceae" to false
+                            )
+                            val userData = hashMapOf(
+                                "gardenName" to "<change garden name>",
+                                "categoryData" to categoryData
+                            )
+                            user.set(userData)
+                                .addOnSuccessListener { documentReference ->
+                                    Log.d("TAG", "DocumentSnapshot added with ID: $documentReference")
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.e("TAGn\'t", "${mAuth.currentUser?.uid}Error adding document", e)
+                                }
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.w("TAG", "Error getting documents.", exception)
+                    }
+
+                val goToHome = Intent(activity, HomeActivity::class.java)
+                startActivity(goToHome)
+                finishAffinity(requireActivity())
+            } else{
+                Log.d("UPDATE UI", it.exception.toString())
+                Toast.makeText(requireActivity(), it.exception.toString(), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 
     private val textWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
