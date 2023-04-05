@@ -1,7 +1,6 @@
 package com.plantmate.plantmate.fragments
 
 import android.app.Activity
-import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -16,13 +15,10 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.fragment.app.Fragment
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -31,7 +27,6 @@ import com.google.firebase.ktx.Firebase
 import com.plantmate.plantmate.R
 import com.plantmate.plantmate.databinding.FragmentLoginBinding
 import com.plantmate.plantmate.HomeActivity
-import com.plantmate.plantmate.objects.FragmentUtils
 import com.plantmate.plantmate.objects.FragmentUtils.replaceFragment
 
 class FragmentLogin: Fragment(R.layout.fragment_login){
@@ -51,6 +46,11 @@ class FragmentLogin: Fragment(R.layout.fragment_login){
         binding.fragmentLoginTvSignup.setOnClickListener{
             replaceFragment(FragmentSignup(), R.id.activity_entry_fragment_view, parentFragmentManager)
         }
+
+        binding.fragmentLoginTvForgot.setOnClickListener{
+            replaceFragment(FragmentResetPassword(), R.id.activity_entry_fragment_view, parentFragmentManager)
+        }
+
 
         binding.fragmentLoginBtnLoginGoogle.setOnClickListener{
             loginUserWithGoogle()

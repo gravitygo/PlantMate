@@ -2,6 +2,7 @@
     <string name="app_name">PlantMate</string>
 
     <string name="forgot"><u>Forgot Password?</u></string>
+    <string name="backtologin"><u>Back to Login</u></string>
     <string name="account_sign"><u>Don\'t have an account? Signup</u></string>
     <string name="account_log"><u>Already have an account? Login</u></string>
 </resources>
