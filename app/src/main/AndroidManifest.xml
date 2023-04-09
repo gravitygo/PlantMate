@@ -30,32 +30,17 @@
             android:exported="false" />
 
         <activity
+            android:name=".PlantTransactionActivity"
+            android:theme="@style/Immersive"
+            android:exported="false" />
+
+        <activity
             android:name=".ViewPlantActivity"
             android:theme="@style/Immersive"
             android:exported="false" />
 
         <activity
             android:name=".HomeActivity"
-            android:theme="@style/Immersive"
-            android:exported="false" />
-
-        <activity
-            android:name=".SellPlantActivity"
-            android:theme="@style/Immersive"
-            android:exported="false" />
-
-        <activity
-            android:name=".PropagatePlantActivity"
-            android:theme="@style/Immersive"
-            android:exported="false" />
-
-        <activity
-            android:name=".StockUpPlantActivity"
-            android:theme="@style/Immersive"
-            android:exported="false" />
-
-        <activity
-            android:name=".DisposePlantActivity"
             android:theme="@style/Immersive"
             android:exported="false" />
 

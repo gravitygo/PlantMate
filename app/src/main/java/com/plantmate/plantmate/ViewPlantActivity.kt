@@ -94,25 +94,33 @@ class ViewPlantActivity: AppCompatActivity(){
         // find views by id and set listeners
         val sellButton = view.findViewById<ConstraintLayout>(R.id.sell)
         sellButton.setOnClickListener {
-            val goToSell = Intent(this, SellPlantActivity::class.java)
+            val goToSell = Intent(this, PlantTransactionActivity::class.java)
+            goToSell.putExtra("transactionType", 1)
+            goToSell.putExtra("plantID", plantID)
             startActivity(goToSell)
         }
 
         val propagateButton = view.findViewById<ConstraintLayout>(R.id.propagate)
         propagateButton.setOnClickListener {
-            val goToPropagate = Intent(this, PropagatePlantActivity::class.java)
+            val goToPropagate = Intent(this, PlantTransactionActivity::class.java)
+            goToPropagate.putExtra("transactionType", 2)
+            goToPropagate.putExtra("plantID", plantID)
             startActivity(goToPropagate)
         }
 
         val stockupButton = view.findViewById<ConstraintLayout>(R.id.stockup)
         stockupButton.setOnClickListener {
-            val goToStockUp = Intent(this, StockUpPlantActivity::class.java)
+            val goToStockUp = Intent(this, PlantTransactionActivity::class.java)
+            goToStockUp.putExtra("transactionType", 3)
+            goToStockUp.putExtra("plantID", plantID)
             startActivity(goToStockUp)
         }
 
         val disposeButton = view.findViewById<ConstraintLayout>(R.id.dispose)
         disposeButton.setOnClickListener {
-            val goToDispose = Intent(this, DisposePlantActivity::class.java)
+            val goToDispose = Intent(this, PlantTransactionActivity::class.java)
+            goToDispose.putExtra("transactionType", 4)
+            goToDispose.putExtra("plantID", plantID)
             startActivity(goToDispose)
         }
         dialog.show()

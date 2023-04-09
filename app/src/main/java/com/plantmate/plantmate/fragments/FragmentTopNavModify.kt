@@ -26,8 +26,7 @@ class FragmentTopNavModify(val color: Int): Fragment(R.layout.fragment_top_nav){
 
         binding.backButton.setOnClickListener{
 
-            val goToHome = Intent(container!!.context, ViewPlantActivity::class.java)
-            startActivity(goToHome)
+            requireActivity().finish()
 
         }
         return binding.root
