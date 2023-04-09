@@ -98,7 +98,9 @@ class EditProfileActivity: AppCompatActivity(){
         confirmButton.setOnClickListener {
             binding.confirmChangeButton.isEnabled = false
             binding.confirmChangeButton.backgroundTintList = ColorStateList.valueOf(getColor(R.color.gray))
-            db.collection("users").document("${mAuth.currentUser?.uid}").update("gardenName", "${binding.gardenNameInput.text}")
+            db.collection("users")
+                .document("${mAuth.currentUser?.uid}")
+                .update("gardenName", "${binding.gardenNameInput.text}")
             Toast.makeText(applicationContext, "Changes saved", Toast.LENGTH_SHORT).show()
             val goToHome = Intent(this, HomeActivity::class.java)
             startActivity(goToHome)
