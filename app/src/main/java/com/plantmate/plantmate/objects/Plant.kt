@@ -1,5 +1,7 @@
 package com.plantmate.plantmate.objects
 
+import android.graphics.Bitmap
+
 class Plant(
     val plantId: String,
     val plantFamily: String,
@@ -7,6 +9,6 @@ class Plant(
     val plantScientificName: String,
     val plantDescription: String,
     //TODO: Uncomment this when you can show the things in recycler view already
-//    val imageType: String,
+//    val imageType: Bitmap,
     val plantStock: Int) {
 }

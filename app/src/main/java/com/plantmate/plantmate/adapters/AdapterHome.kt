@@ -10,7 +10,7 @@ import com.plantmate.plantmate.holders.HolderCategory
 import com.plantmate.plantmate.holders.HolderHeader
 import com.plantmate.plantmate.objects.Plant
 
-class AdapterHome(private val data : HashMap<String, ArrayList<Plant>>, val activity: Activity): RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
+class AdapterHome(private var data : HashMap<String, ArrayList<Plant>>, val activity: Activity): RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
     companion object {
         private const val VIEW_TYPE_FIRST = 1
         private const val VIEW_TYPE_NORMAL = 2
@@ -41,6 +41,10 @@ class AdapterHome(private val data : HashMap<String, ArrayList<Plant>>, val acti
             }
             else -> throw IllegalArgumentException("Invalid view type")
         }
+    }
+
+    fun notifyChanged(hm : HashMap<String, ArrayList<Plant>>) {
+        data = hm
     }
 
     override fun getItemCount(): Int {
