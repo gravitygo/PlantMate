@@ -2,6 +2,7 @@ package com.plantmate.plantmate.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -18,11 +19,17 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.ChartTouchListener
 import com.github.mikephil.charting.listener.OnChartGestureListener
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.plantmate.plantmate.DAO.DataHelper
+import com.github.mikephil.charting.utils.EntryXComparator
+import com.google.firebase.Timestamp
+import com.plantmate.plantmate.CallBack.EntryCallback
+import com.plantmate.plantmate.DAO.DataHelper.Companion.data
 import com.plantmate.plantmate.DAO.DataHelper.Companion.dataGenerate
+import com.plantmate.plantmate.DAO.TransactionDao
 import com.plantmate.plantmate.R
 import com.plantmate.plantmate.databinding.FragmentChartBinding
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.random.Random
 
 class FragmentChart : Fragment(R.layout.fragment_chart)  {
@@ -33,6 +40,9 @@ class FragmentChart : Fragment(R.layout.fragment_chart)  {
     private lateinit var btnPurchase : ConstraintLayout
     private lateinit var btnWithered : ConstraintLayout
     private lateinit var lineChart: LineChart
+    private lateinit var documents: List<Map<String, Any>>
+
+    val td = TransactionDao()
     // TODO: Each transaction should have product_id, product_type, transaction_Type{1-4}, amount, transaction cost, transaction_net cost
     @Suppress("DEPRECATION")
     override fun onCreateView(
@@ -71,13 +81,13 @@ class FragmentChart : Fragment(R.layout.fragment_chart)  {
         lineChart = binding.lineChart
         setupLineChart()
         // Add data to the line chart
-        setData(dataGenerate(7))
+        dataGet(7)
 
-        binding.fragmentChartBtn1w.setOnClickListener { setData(dataGenerate(7)) }
-        binding.fragmentChartBtn1m.setOnClickListener { setData(dataGenerate(28)) }
-        binding.fragmentChartBtn3m.setOnClickListener { setData(dataGenerate(84)) }
-        binding.fragmentChartBtn1y.setOnClickListener { setData(dataGenerate(365)) }
-        binding.fragmentChartBtnAll.setOnClickListener { setData(dataGenerate(365)) }
+        binding.fragmentChartBtn1w.setOnClickListener { dataGet(7)}
+        binding.fragmentChartBtn1m.setOnClickListener { dataGet(28) }
+        binding.fragmentChartBtn3m.setOnClickListener { dataGet(84) }
+        binding.fragmentChartBtn1y.setOnClickListener { dataGet(365) }
+        binding.fragmentChartBtnAll.setOnClickListener { dataGet(10000) }
 
         return binding.root
     }
@@ -137,7 +147,8 @@ class FragmentChart : Fragment(R.layout.fragment_chart)  {
                 binding.fragmentChartTvValue.text = current.substring(0, current.length-3)
                 binding.fragmentChartTvDecimal.text = current.substring(current.length-3, current.length)
                 binding.fragmentChartTvAllTimeIncrease.text = "${h?.x}"
-                binding.fragmentChartTvDate.text = "${h?.x}"
+                val time = documents[h?.x!!.toInt()]["date"] as Timestamp
+                binding.fragmentChartTvDate.text = "${getDateWithoutTime(time.toDate())}"
             }
 
             override fun onNothingSelected() {
@@ -155,15 +166,18 @@ class FragmentChart : Fragment(R.layout.fragment_chart)  {
                 binding.fragmentChartTvDate.visibility = View.VISIBLE
                 binding.fragmentChartTvValue.text = current.substring(0, current.length-3)
                 binding.fragmentChartTvDecimal.text = current.substring(current.length-3, current.length)
-                binding.fragmentChartTvDate.text = "${h?.x}"
+                val time = documents[h?.x!!.toInt()]["date"] as Timestamp
+                binding.fragmentChartTvDate.text = "${getDateWithoutTime(time.toDate())}"
                 binding.fragmentChartTvAllTimeIncrease.text = "${h?.x}"
             }
+
 
             @SuppressLint("SetTextI18n")
             override fun onChartGestureEnd(
                 me: MotionEvent?,
                 lastPerformedGesture: ChartTouchListener.ChartGesture?
             ) {
+                // TODO: ADD THE DEFAULT INFORMATIONS
                 binding.fragmentChartTvDate.visibility= View.GONE
                 binding.fragmentChartAllTime.visibility = View.VISIBLE
                 binding.fragmentChartTvValue.text = "1,000"
@@ -185,7 +199,28 @@ class FragmentChart : Fragment(R.layout.fragment_chart)  {
         }
 
     }
+    private fun dataGet(size: Long){
+        td.read(size, object:EntryCallback{
+            override fun onSuccess(datas: List<Map<String, Any>>) {
+                documents=datas
+                val entries = mutableListOf<Entry>()
 
+                for((i, data) in datas.withIndex()){
+                    val cost = data["cost"] as Number
+                    entries.add(Entry(i.toFloat(), cost.toFloat()))
+                }
+                setData(entries)
+            }
+            override fun onFailure(exception: Exception) {
+                Log.e("Error", "${exception.toString()}")
+            }
+
+        })
+    }
+    fun getDateWithoutTime(date: Date): String {
+        val formatter = SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.getDefault())
+        return formatter.format(date)
+    }
     private fun setData(entries: List<Entry>) {
         val dataSet = LineDataSet(entries, "Label")
         dataSet.setDrawFilled(true)
@@ -195,7 +230,6 @@ class FragmentChart : Fragment(R.layout.fragment_chart)  {
         dataSet.highLightColor = ContextCompat.getColor(this.requireContext(), R.color.white) // set highlight color to white
         dataSet.lineWidth = 1f
         dataSet.setDrawHorizontalHighlightIndicator(false)
-
         // Add gradient to the fill color
         val fillGradient = ContextCompat.getDrawable(this.requireContext(), R.drawable.chart_fill_gradient)
         dataSet.fillDrawable = fillGradient
