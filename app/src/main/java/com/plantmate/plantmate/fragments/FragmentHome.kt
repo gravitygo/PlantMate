@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.plantmate.plantmate.DAO.DataHelper
 import com.plantmate.plantmate.R
 import com.plantmate.plantmate.adapters.AdapterHome
@@ -83,6 +84,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                                     it.data["plantCultivarName"].toString(),
                                     it.data["plantScientificName"].toString(),
                                     it.data["plantDescription"].toString(),
+                                    it.data["imageType"].toString(),
                                     it.data["plantStock"].toString().toInt())
                                 )
                             }
