@@ -87,33 +87,36 @@
                         />
 
                     <TextView
+                        android:id="@+id/stock_Count"
                         android:layout_height="30dp"
                         android:layout_width="wrap_content"
                         android:layout_gravity="center"
                         android:textSize="16sp"
-                        android:text="88"
+                        android:text="0"
                         android:textColor="@color/purple_primary"
                         android:layout_marginBottom="10dp"
                         android:layout_columnWeight="1"
                         />
 
                     <TextView
+                        android:id="@+id/sale_Count"
                         android:layout_height="30dp"
                         android:layout_width="wrap_content"
                         android:layout_gravity="center"
                         android:textSize="16sp"
-                        android:text="88"
+                        android:text="0"
                         android:textColor="@color/tertiary"
                         android:layout_marginBottom="10dp"
                         android:layout_columnWeight="1"
                         />
 
                     <TextView
+                        android:id="@+id/dispose_Count"
                         android:layout_height="30dp"
                         android:layout_width="wrap_content"
                         android:layout_gravity="center"
                         android:textSize="16sp"
-                        android:text="88"
+                        android:text="0"
                         android:textColor="@color/red_primary"
                         android:layout_marginBottom="10dp"
                         android:layout_columnWeight="1"
@@ -138,7 +141,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/horizontal_Rule"
-                    android:text="Aloe Barbadensis Miller"
+                    android:text="Loading"
                     android:textSize="39sp"
                     android:textStyle="bold"
                     android:textColor="@color/tertiary"
@@ -151,7 +154,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/sci_Name"
-                    android:text="P.V. 108 'Super Blue'"
+                    android:text="Loading"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:textSize="16sp"
@@ -179,7 +182,7 @@
                     android:justificationMode="inter_word"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:text="     Aloe barbadensis miller belongs to Asphodelaceae (Liliaceae) family, and is a shrubby or arborescent, perennial, xerophytic, succulent, pea- green color plant. It grows mainly in the dry regions of Africa, Asia, Europe and America. This PV108 hybrid features blue leaves with a powdery finish. 'Super Blue' has a very clean look and a must in every aloe collection. The PV in its cultivar name stands for Pijaya Vachajitpan, a famous Thai hybridizer who created this hybrid. "
+                    android:text="Loading"
                     android:textSize="16sp"
                     android:textColor="@color/primary"
                     />

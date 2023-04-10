@@ -15,7 +15,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
+import com.github.sumimakito.awesomeqr.AwesomeQrRenderer
+import com.github.sumimakito.awesomeqr.option.RenderOption
+import com.github.sumimakito.awesomeqr.option.color.Color
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -32,7 +38,9 @@ class PlantTransactionActivity : AppCompatActivity(){
 
     private lateinit var binding: ActivityModifyPlantBinding
     private val MAX_FILE_SIZE: Long = 1024 * 1024 * 10
-    var transactionType = 0
+    private lateinit var db: FirebaseFirestore
+    private lateinit var mAuth: FirebaseAuth
+    var transactionType = ""
     var primaryColor = 0
     var stockText = ""
     var priceText = ""
@@ -67,10 +75,13 @@ class PlantTransactionActivity : AppCompatActivity(){
         setContentView(binding.root)
         setFullScreen(this)
 
+        db = Firebase.firestore
+        mAuth = FirebaseAuth.getInstance()
+
         plantID = intent.getStringExtra("plantID").toString()
-        transactionType = intent.getIntExtra("transactionType", 0)
+        transactionType = intent.getStringExtra("transactionType")!!
         when (transactionType) {
-            1 -> {
+            "Sale" -> {
                 primaryColor = ContextCompat.getColor(this, R.color.primary)
                 stockText = "Sold Stocks:"
                 priceText = "Price Sold (php):"
@@ -79,16 +90,16 @@ class PlantTransactionActivity : AppCompatActivity(){
                 binding.priceInput.setBackgroundResource(R.drawable.sell_input_box)
                 binding.stockInput.setBackgroundResource(R.drawable.sell_input_box)
             }
-            2 -> {
+            "Propagation" -> {
                 primaryColor = ContextCompat.getColor(this, R.color.teal_primary)
                 stockText = "Propagated Stocks:"
-                priceText = "Propagation Value (php):"
+                priceText = "Propagation Cost (php):"
                 totalText = "New Stock Total:"
                 actionText = "Propagate"
                 binding.priceInput.setBackgroundResource(R.drawable.propagate_input_box)
                 binding.stockInput.setBackgroundResource(R.drawable.propagate_input_box)
             }
-            3 -> {
+            "Purchase" -> {
                 primaryColor = ContextCompat.getColor(this, R.color.purple_primary)
                 stockText = "New Stocks:"
                 priceText = "Price Bought (php):"
@@ -97,7 +108,7 @@ class PlantTransactionActivity : AppCompatActivity(){
                 binding.priceInput.setBackgroundResource(R.drawable.stockup_input_box)
                 binding.stockInput.setBackgroundResource(R.drawable.stockup_input_box)
             }
-            4 -> {
+            "Dispose" -> {
                 primaryColor = ContextCompat.getColor(this, R.color.red_primary)
                 stockText = "Perished Stocks:"
                 priceText = "Price Lost (php):"
@@ -108,8 +119,6 @@ class PlantTransactionActivity : AppCompatActivity(){
             }
         }
 
-        val mAuth = FirebaseAuth.getInstance()
-        val db = Firebase.firestore
 
         val collectionList = listOf("Araceae", "Asphodelaceae", "Cactaceae", "Rutaceae")
         for (col in collectionList) {
@@ -170,19 +179,19 @@ class PlantTransactionActivity : AppCompatActivity(){
         var dialogConfirmationMessage = "you are about to "
         // find views by id and set proper data and listeners
         when (transactionType) {
-            1 -> {
+            "Sale" -> {
                 dialogBox.setBackgroundResource(R.drawable.sell_input_box)
                 dialogConfirmationMessage += "sell "
             }
-            2 -> {
+            "Propagation" -> {
                 dialogBox.setBackgroundResource(R.drawable.propagate_input_box)
                 dialogConfirmationMessage += "propagate "
             }
-            3 -> {
+            "Purchase" -> {
                 dialogBox.setBackgroundResource(R.drawable.stockup_input_box)
                 dialogConfirmationMessage += "stock up "
             }
-            4 -> {
+            "Dispose" -> {
                 dialogBox.setBackgroundResource(R.drawable.dispose_input_box)
                 dialogConfirmationMessage += "dispose "
             }
@@ -204,13 +213,172 @@ class PlantTransactionActivity : AppCompatActivity(){
         confirmButton.setOnClickListener {
             dialog.dismiss()
 
+
+            ///////////////////////////////// INSERT INTO DB HERE
+
+            val userDocRef = db.collection("users").document(mAuth.currentUser?.uid!!)
+            val transactionRef = userDocRef.collection("transaction")
+            val aggregateRef = userDocRef.collection("aggregate")
+            var transactionCost = binding.stockInput.text.toString().toFloat() * binding.priceInput.text.toString().toFloat()
+
+
+            val transaction = hashMapOf(
+                "plantId" to plantID,
+                "cost" to transactionCost,
+                "date" to FieldValue.serverTimestamp(),
+                "type" to transactionType
+            )
+
+            transactionRef.add(transaction).addOnSuccessListener {
+                Toast.makeText(applicationContext, "Transaction saved", Toast.LENGTH_SHORT).show()
+            }.addOnFailureListener { e ->
+                Toast.makeText(applicationContext, "Transaction error", Toast.LENGTH_SHORT).show()
+                Log.d("Transaction Error", e.toString())
+            }
+
+
+            // Convert yourDate to a Calendar object
+            val calendar = Calendar.getInstance()
+
+            // Set the time to the start of the day
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.time = Date(calendar.time.time /1000 * 1000)
+            var calendarTimeStamp = Timestamp(calendar.time)
+
+            // Query transactions with date within the range of the day
+            val query = aggregateRef.whereEqualTo("date", calendarTimeStamp)
+
+            query.get().addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    // There are no documents matching the query
+                    var netprofit = 0f
+                    var propagation = 0f
+                    var purchases = 0f
+                    var sales = 0f
+                    var withered = 0f
+
+                    when (transactionType) {
+                        "Sale" -> {
+                            sales = transactionCost
+                        }
+                        "Propagation" -> {
+                            propagation = transactionCost
+                        }
+                        "Purchase" -> {
+                            purchases = transactionCost
+                        }
+                        "Dispose" -> {
+                            withered = transactionCost
+                        }
+                    }
+
+                    netprofit = sales - propagation - withered - purchases
+
+                    val aggregateInstance = hashMapOf(
+                        "date" to calendarTimeStamp,
+                        "netprofit" to netprofit,
+                        "propagation" to propagation,
+                        "purchases" to purchases,
+                        "sales" to transactionCost,
+                        "withered" to withered
+                    )
+
+                    aggregateRef.add(aggregateInstance).addOnSuccessListener {
+                        Toast.makeText(applicationContext, "Aggregate saved", Toast.LENGTH_SHORT).show()
+                    }.addOnFailureListener { e ->
+                        Toast.makeText(applicationContext, "Aggregate error", Toast.LENGTH_SHORT).show()
+                        Log.d("Transaction Error", e.toString())
+                    }
+                } else {
+                    for (document in documents) {
+                        // Document date matches yourDate
+                        // Do something with the document data
+                        // For example, update a field in the "aggregate" collection
+
+                        when (transactionType) {
+                            "Sale" -> {
+                                val aggregateDocRef = aggregateRef.document(document.id)
+                                aggregateDocRef.get()
+                                    .addOnSuccessListener { documentSnapshot ->
+                                        if (documentSnapshot.exists()) {
+                                            val currentPropagation = documentSnapshot.getLong("propagation") ?: 0
+                                            val currentPurchases = documentSnapshot.getLong("purchases") ?: 0
+                                            val currentSales = documentSnapshot.getLong("sales") ?: 0
+                                            val currentWithered = documentSnapshot.getLong("withered") ?: 0
+                                            val newNetprofit = currentSales + transactionCost - currentPropagation - currentWithered - currentPurchases
+                                            aggregateDocRef.update("sales", currentSales + transactionCost)
+                                            aggregateDocRef.update("netprofit", newNetprofit)
+                                        }
+                                    }
+                            }
+                            "Propagation" -> {
+                                val aggregateDocRef = aggregateRef.document(document.id)
+                                aggregateDocRef.get()
+                                    .addOnSuccessListener { documentSnapshot ->
+                                        if (documentSnapshot.exists()) {
+                                            val currentPropagation = documentSnapshot.getLong("propagation") ?: 0
+                                            val currentPurchases = documentSnapshot.getLong("purchases") ?: 0
+                                            val currentSales = documentSnapshot.getLong("sales") ?: 0
+                                            val currentWithered = documentSnapshot.getLong("withered") ?: 0
+                                            val newNetprofit = currentSales - transactionCost - currentPropagation - currentWithered - currentPurchases
+                                            aggregateDocRef.update("propagation", currentPropagation + transactionCost)
+                                            aggregateDocRef.update("netprofit", newNetprofit)
+                                        }
+                                    }
+                            }
+                            "Purchase" -> {
+                                val aggregateDocRef = aggregateRef.document(document.id)
+                                aggregateDocRef.get()
+                                    .addOnSuccessListener { documentSnapshot ->
+                                        if (documentSnapshot.exists()) {
+                                            val currentPropagation = documentSnapshot.getLong("propagation") ?: 0
+                                            val currentPurchases = documentSnapshot.getLong("purchases") ?: 0
+                                            val currentSales = documentSnapshot.getLong("sales") ?: 0
+                                            val currentWithered = documentSnapshot.getLong("withered") ?: 0
+                                            val newNetprofit = currentSales - transactionCost - currentPropagation - currentWithered - currentPurchases
+                                            aggregateDocRef.update("purchases", currentPurchases + transactionCost)
+                                            aggregateDocRef.update("netprofit", newNetprofit)
+                                        }
+                                    }
+                            }
+                            "Dispose" -> {
+                                val aggregateDocRef = aggregateRef.document(document.id)
+                                aggregateDocRef.get()
+                                    .addOnSuccessListener { documentSnapshot ->
+                                        if (documentSnapshot.exists()) {
+                                            val currentPropagation = documentSnapshot.getLong("propagation") ?: 0
+                                            val currentPurchases = documentSnapshot.getLong("purchases") ?: 0
+                                            val currentSales = documentSnapshot.getLong("sales") ?: 0
+                                            val currentWithered = documentSnapshot.getLong("withered") ?: 0
+                                            val newNetprofit = currentSales - transactionCost - currentPropagation - currentWithered - currentPurchases
+                                            aggregateDocRef.update("withered", currentWithered + transactionCost)
+                                            aggregateDocRef.update("netprofit", newNetprofit)
+                                        }
+                                    }
+                            }
+                        }
+
+                    }
+                }
+            }.addOnFailureListener { exception ->
+                Log.w("TAG", "Error getting documents: ", exception)
+            }
+
+
+
+
+
+
+//////////////////////////////////////
             // reset stock and price data
             binding.stockInput.text.clear()
             binding.priceInput.text.clear()
             binding.totalPrice.text = "0.00"
             binding.confirmModifyButton.backgroundTintList = ColorStateList.valueOf(getColor(R.color.gray))
 
-            Toast.makeText(applicationContext, "Changes saved", Toast.LENGTH_SHORT).show();
+
         }
 
         dialog.show()

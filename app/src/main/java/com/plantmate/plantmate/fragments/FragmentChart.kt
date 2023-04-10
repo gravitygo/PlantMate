@@ -289,7 +289,7 @@ class FragmentChart : Fragment(R.layout.fragment_chart)  {
                     val netProfit = value["netprofit"] as Number
                     val sales = value["sales"] as Number
                     val purchases = value["purchases"] as Number
-                    val inventory = value["inventory"] as Number
+                    val withered = value["withered"] as Number
                     val propagation = value["propagation"] as Number
                     date.seconds=0
                     date.minutes=0
@@ -309,7 +309,7 @@ class FragmentChart : Fragment(R.layout.fragment_chart)  {
                             "netprofit" to 0f,
                             "sales" to 0f,
                             "purchases" to 0f,
-                            "inventory" to 0f,
+                            "withered" to 0f,
                             "propagation" to 0f
                         )
                         for(j in 0 .. 4){
@@ -335,7 +335,7 @@ class FragmentChart : Fragment(R.layout.fragment_chart)  {
                     lastVal[0]+=netProfit.toFloat()
                     lastVal[1]+=sales.toFloat()
                     lastVal[2]+=purchases.toFloat()
-                    lastVal[3]+=inventory.toFloat()
+                    lastVal[3]+=withered.toFloat()
                     lastVal[4]+=propagation.toFloat()
                     for(j in 0 .. 4){
                         chartsData[j][4].add(Entry(index.toFloat(), lastVal[j]))
