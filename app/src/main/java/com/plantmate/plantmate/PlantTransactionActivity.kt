@@ -41,12 +41,15 @@ class PlantTransactionActivity : AppCompatActivity(){
     private lateinit var db: FirebaseFirestore
     private lateinit var mAuth: FirebaseAuth
     var transactionType = ""
-    var primaryColor = 0
     var stockText = ""
     var priceText = ""
     var totalText = ""
     var actionText = ""
     var plantID = ""
+    var primaryColor = 0
+    var plantStock = 0
+    var plantSale = 0
+    var plantWithered = 0
 
     private val textWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
@@ -55,7 +58,7 @@ class PlantTransactionActivity : AppCompatActivity(){
         }
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             // if stock and price input is not empty
-            if (binding.stockInput.text.toString().trim().isNotEmpty() && binding.priceInput.text.toString().trim().isNotEmpty()){
+            if (isValidEntry()){
                 // update total price
                 val stock = Integer.parseInt(binding.stockInput.text.toString())
                 val price = binding.priceInput.text.toString().toDouble()
@@ -65,6 +68,27 @@ class PlantTransactionActivity : AppCompatActivity(){
                 binding.confirmModifyButton.backgroundTintList = ColorStateList.valueOf(primaryColor)
             }
         }
+    }
+
+    private fun isValidEntry() : Boolean{
+        var flag = false
+
+        if (binding.stockInput.text.toString().trim().isNotEmpty() && binding.priceInput.text.toString().trim().isNotEmpty()){
+
+            val stockInput = binding.stockInput.text.toString().toInt()
+            val princeInput = binding.priceInput.text.toString().toFloat()
+
+            if (transactionType == "Sale" || transactionType == "Dispose"){
+                if(stockInput <= plantStock && princeInput > 0 && stockInput > 0){
+                    return true
+                }
+            } else if (transactionType == "Propagation" || transactionType == "Purchase"){
+                if(princeInput > 0 && stockInput > 0){
+                    return true
+                }
+            }
+        }
+        return flag
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -138,6 +162,9 @@ class PlantTransactionActivity : AppCompatActivity(){
                         imageRef.getBytes(MAX_FILE_SIZE).addOnSuccessListener { res ->
                             binding.productImage.setImageBitmap(res.toBitmap())
                         }
+                        plantStock = Integer.parseInt(result.getLong("plantStock").toString())
+                        plantSale = Integer.parseInt(result.getLong("plantSale").toString())
+                        plantWithered = Integer.parseInt(result.getLong("plantWithered").toString())
                     }
                 }
         }
@@ -219,7 +246,9 @@ class PlantTransactionActivity : AppCompatActivity(){
             val userDocRef = db.collection("users").document(mAuth.currentUser?.uid!!)
             val transactionRef = userDocRef.collection("transaction")
             val aggregateRef = userDocRef.collection("aggregate")
-            var transactionCost = binding.stockInput.text.toString().toFloat() * binding.priceInput.text.toString().toFloat()
+            var transactionCount = binding.stockInput.text.toString().toFloat()
+            var transactionPrice = binding.priceInput.text.toString().toFloat()
+            var transactionCost = transactionCount * transactionPrice
 
 
             val transaction = hashMapOf(
@@ -291,6 +320,8 @@ class PlantTransactionActivity : AppCompatActivity(){
                         Toast.makeText(applicationContext, "Aggregate error", Toast.LENGTH_SHORT).show()
                         Log.d("Transaction Error", e.toString())
                     }
+
+
                 } else {
                     for (document in documents) {
                         // Document date matches yourDate
@@ -303,13 +334,8 @@ class PlantTransactionActivity : AppCompatActivity(){
                                 aggregateDocRef.get()
                                     .addOnSuccessListener { documentSnapshot ->
                                         if (documentSnapshot.exists()) {
-                                            val currentPropagation = documentSnapshot.getLong("propagation") ?: 0
-                                            val currentPurchases = documentSnapshot.getLong("purchases") ?: 0
-                                            val currentSales = documentSnapshot.getLong("sales") ?: 0
-                                            val currentWithered = documentSnapshot.getLong("withered") ?: 0
-                                            val newNetprofit = currentSales + transactionCost - currentPropagation - currentWithered - currentPurchases
-                                            aggregateDocRef.update("sales", currentSales + transactionCost)
-                                            aggregateDocRef.update("netprofit", newNetprofit)
+                                            aggregateDocRef.update("sales", FieldValue.increment(transactionCost.toDouble()))
+                                            aggregateDocRef.update("netprofit", FieldValue.increment(transactionCost.toDouble()))
                                         }
                                     }
                             }
@@ -318,13 +344,8 @@ class PlantTransactionActivity : AppCompatActivity(){
                                 aggregateDocRef.get()
                                     .addOnSuccessListener { documentSnapshot ->
                                         if (documentSnapshot.exists()) {
-                                            val currentPropagation = documentSnapshot.getLong("propagation") ?: 0
-                                            val currentPurchases = documentSnapshot.getLong("purchases") ?: 0
-                                            val currentSales = documentSnapshot.getLong("sales") ?: 0
-                                            val currentWithered = documentSnapshot.getLong("withered") ?: 0
-                                            val newNetprofit = currentSales - transactionCost - currentPropagation - currentWithered - currentPurchases
-                                            aggregateDocRef.update("propagation", currentPropagation + transactionCost)
-                                            aggregateDocRef.update("netprofit", newNetprofit)
+                                            aggregateDocRef.update("propagation", FieldValue.increment(transactionCost.toDouble()))
+                                            aggregateDocRef.update("netprofit", FieldValue.increment((transactionCost* -1).toDouble()))
                                         }
                                     }
                             }
@@ -333,13 +354,8 @@ class PlantTransactionActivity : AppCompatActivity(){
                                 aggregateDocRef.get()
                                     .addOnSuccessListener { documentSnapshot ->
                                         if (documentSnapshot.exists()) {
-                                            val currentPropagation = documentSnapshot.getLong("propagation") ?: 0
-                                            val currentPurchases = documentSnapshot.getLong("purchases") ?: 0
-                                            val currentSales = documentSnapshot.getLong("sales") ?: 0
-                                            val currentWithered = documentSnapshot.getLong("withered") ?: 0
-                                            val newNetprofit = currentSales - transactionCost - currentPropagation - currentWithered - currentPurchases
-                                            aggregateDocRef.update("purchases", currentPurchases + transactionCost)
-                                            aggregateDocRef.update("netprofit", newNetprofit)
+                                            aggregateDocRef.update("purchases", FieldValue.increment(transactionCost.toDouble()))
+                                            aggregateDocRef.update("netprofit", FieldValue.increment((transactionCost* -1).toDouble()))
                                         }
                                     }
                             }
@@ -348,13 +364,8 @@ class PlantTransactionActivity : AppCompatActivity(){
                                 aggregateDocRef.get()
                                     .addOnSuccessListener { documentSnapshot ->
                                         if (documentSnapshot.exists()) {
-                                            val currentPropagation = documentSnapshot.getLong("propagation") ?: 0
-                                            val currentPurchases = documentSnapshot.getLong("purchases") ?: 0
-                                            val currentSales = documentSnapshot.getLong("sales") ?: 0
-                                            val currentWithered = documentSnapshot.getLong("withered") ?: 0
-                                            val newNetprofit = currentSales - transactionCost - currentPropagation - currentWithered - currentPurchases
-                                            aggregateDocRef.update("withered", currentWithered + transactionCost)
-                                            aggregateDocRef.update("netprofit", newNetprofit)
+                                            aggregateDocRef.update("withered", FieldValue.increment(transactionCost.toDouble()))
+                                            aggregateDocRef.update("netprofit", FieldValue.increment((transactionCost* -1).toDouble()))
                                         }
                                     }
                             }
@@ -367,11 +378,46 @@ class PlantTransactionActivity : AppCompatActivity(){
             }
 
 
+            if (transactionType == "Sale"){
 
+                val collectionList = listOf("Araceae", "Asphodelaceae", "Cactaceae", "Rutaceae")
+                for (col in collectionList) {
+                    val plantDocRef = userDocRef.collection(col).document(plantID)
+                    plantDocRef.get().addOnSuccessListener { result ->
+                        if (result.getString("plantFamily") != null) {
+                            plantDocRef.update("plantSale", FieldValue.increment(transactionCount.toLong()))
+                            plantDocRef.update("plantStock", FieldValue.increment((transactionCount.toLong()) * -1))
+                            plantStock -= transactionCount.toInt()
+                        }
+                    }
+                }
 
+            }
+            else if (transactionType == "Propagation" || transactionType == "Purchase"){
+                val collectionList = listOf("Araceae", "Asphodelaceae", "Cactaceae", "Rutaceae")
+                for (col in collectionList) {
+                    val plantDocRef = userDocRef.collection(col).document(plantID)
+                    plantDocRef.get().addOnSuccessListener { result ->
+                        if (result.getString("plantFamily") != null) {
+                            plantDocRef.update("plantStock", FieldValue.increment(transactionCount.toLong()))
+                            plantStock -= transactionCount.toInt()
+                        }
+                    }
+                }
+            } else if (transactionType == "Dispose"){
+                val collectionList = listOf("Araceae", "Asphodelaceae", "Cactaceae", "Rutaceae")
+                for (col in collectionList) {
+                    val plantDocRef = userDocRef.collection(col).document(plantID)
+                    plantDocRef.get().addOnSuccessListener { result ->
+                        if (result.getString("plantFamily") != null) {
+                            plantDocRef.update("plantWithered", FieldValue.increment(transactionCount.toLong()))
+                            plantDocRef.update("plantStock", FieldValue.increment((transactionCount.toLong()) * -1))
+                            plantStock -= transactionCount.toInt()
+                        }
+                    }
+                }
+            }
 
-
-//////////////////////////////////////
             // reset stock and price data
             binding.stockInput.text.clear()
             binding.priceInput.text.clear()

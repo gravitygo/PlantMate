@@ -254,6 +254,8 @@ class AddPlantActivity : AppCompatActivity(){
                 "plantScientificName" to "${binding.sciNameInput.text}",
                 "plantDescription" to "${binding.descriptionInput.text}",
                 "plantStock" to Integer.parseInt(binding.stockInput.text.toString()),
+                "plantSale" to 0,
+                "plantWithered" to 0,
                 "imageType" to "$type"
             )
 

@@ -33,8 +33,6 @@ class ViewPlantActivity: AppCompatActivity(){
     private lateinit var imageExtension: String
     private val MAX_FILE_SIZE: Long = 1024 * 1024 * 10
     override fun onCreate(savedInstanceState: Bundle?) {
-        //TODO: REMOVE THIS BUT THIS IS FOR LOGGING PURPOSES
-        Log.d("Hi", "${intent.getStringExtra("Hi")}")
         // set binding and fullscreen
         super.onCreate(savedInstanceState)
         binding = ActivityViewPlantBinding.inflate(layoutInflater)
@@ -66,6 +64,10 @@ class ViewPlantActivity: AppCompatActivity(){
                         binding.sciName.text = result.getString("plantScientificName").toString()
                         binding.cvName.text = result.getString("plantCultivarName").toString()
                         binding.descriptionBody.text = result.getString("plantDescription").toString()
+
+                        binding.stockCount.text = result.getLong("plantStock").toString()
+                        binding.saleCount.text = result.getLong("plantSale").toString()
+                        binding.witheredCount.text = result.getLong("plantWithered").toString()
                         // api call2
                         val storageRef = Firebase.storage.reference
                         val pathRef = mAuth.currentUser?.uid.toString() + "/" + plantID + "." +imageExtension
