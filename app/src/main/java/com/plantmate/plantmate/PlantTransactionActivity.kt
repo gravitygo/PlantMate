@@ -165,6 +165,7 @@ class PlantTransactionActivity : AppCompatActivity(){
                         plantStock = Integer.parseInt(result.getLong("plantStock").toString())
                         plantSale = Integer.parseInt(result.getLong("plantSale").toString())
                         plantWithered = Integer.parseInt(result.getLong("plantWithered").toString())
+                        binding.currentStockText.text = plantStock.toString()
                     }
                 }
         }
@@ -183,6 +184,7 @@ class PlantTransactionActivity : AppCompatActivity(){
         binding.totalTitle.text = totalText
         binding.confirmModifyButton.text = actionText
 
+        binding.currentStockTitle.setTextColor(primaryColor)
         binding.stockText.setTextColor(primaryColor)
         binding.priceText.setTextColor(primaryColor)
         binding.totalTitle.setTextColor(primaryColor)
@@ -388,6 +390,7 @@ class PlantTransactionActivity : AppCompatActivity(){
                             plantDocRef.update("plantSale", FieldValue.increment(transactionCount.toLong()))
                             plantDocRef.update("plantStock", FieldValue.increment((transactionCount.toLong()) * -1))
                             plantStock -= transactionCount.toInt()
+                            binding.currentStockText.text = plantStock.toString()
                         }
                     }
                 }
@@ -400,7 +403,8 @@ class PlantTransactionActivity : AppCompatActivity(){
                     plantDocRef.get().addOnSuccessListener { result ->
                         if (result.getString("plantFamily") != null) {
                             plantDocRef.update("plantStock", FieldValue.increment(transactionCount.toLong()))
-                            plantStock -= transactionCount.toInt()
+                            plantStock += transactionCount.toInt()
+                            binding.currentStockText.text = plantStock.toString()
                         }
                     }
                 }
@@ -413,6 +417,7 @@ class PlantTransactionActivity : AppCompatActivity(){
                             plantDocRef.update("plantWithered", FieldValue.increment(transactionCount.toLong()))
                             plantDocRef.update("plantStock", FieldValue.increment((transactionCount.toLong()) * -1))
                             plantStock -= transactionCount.toInt()
+                            binding.currentStockText.text = plantStock.toString()
                         }
                     }
                 }

@@ -94,10 +94,31 @@
             tools:layout_editor_absoluteX="180dp" />
 
         <TextView
-            android:id="@+id/stock_text"
+            android:id="@+id/current_stock_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/cv_name"
+            android:text="Current Stocks:"
+            android:textColor="@color/primary"
+            android:textSize="13sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/current_stock_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/current_stock_title"
+            android:text="0"
+            android:paddingLeft="5sp"
+            android:textColor="@color/black"
+            android:textSize="25sp"/>
+
+
+        <TextView
+            android:id="@+id/stock_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/current_stock_text"
             android:text="Sold Stocks:"
             android:textColor="@color/primary"
             android:textSize="13sp"
