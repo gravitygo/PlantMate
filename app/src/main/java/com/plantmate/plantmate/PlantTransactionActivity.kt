@@ -312,7 +312,7 @@ class PlantTransactionActivity : AppCompatActivity(){
                         "netprofit" to netprofit,
                         "propagation" to propagation,
                         "purchases" to purchases,
-                        "sales" to transactionCost,
+                        "sales" to sales,
                         "withered" to withered
                     )
 
@@ -326,9 +326,6 @@ class PlantTransactionActivity : AppCompatActivity(){
 
                 } else {
                     for (document in documents) {
-                        // Document date matches yourDate
-                        // Do something with the document data
-                        // For example, update a field in the "aggregate" collection
 
                         when (transactionType) {
                             "Sale" -> {
