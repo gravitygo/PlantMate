@@ -46,16 +46,29 @@ class FragmentTransaction : Fragment(R.layout.fragment_transaction) {
             .document("${mAuth.currentUser?.uid}")
             .collection("transaction").orderBy("date", Query.Direction.DESCENDING).get().addOnSuccessListener {
                 for (docs in it) {
-                    data.add(
-                        TransactionData(
-                            docs["date"] as Timestamp,
-                            docs["cost"] as Number,
-                            docs["plantId"] as String,
-                            docs["type"] as String
-                        )
-                    )
+
+                    val collectionList = listOf("Araceae", "Asphodelaceae", "Cactaceae", "Rutaceae")
+                    for (col in collectionList) {
+                        db.collection("users").document("${mAuth.currentUser?.uid}").collection(col)
+                            .document(docs["plantId"].toString()).get()
+                            .addOnSuccessListener { result ->
+                                if (result.getString("plantFamily") != null) {
+                                    val sciName= result.getString("plantScientificName").toString()
+                                    val cvName = result.getString("plantCultivarName").toString()
+                                    val plantName = "$sciName ($cvName)"
+                                    data.add(
+                                        TransactionData(
+                                            docs["date"] as Timestamp,
+                                            docs["cost"] as Number,
+                                            plantName,
+                                            docs["type"] as String
+                                        )
+                                    )
+                                    adapter.notifyChange(data)
+                                }
+                            }
+                    }
                 }
-                adapter.notifyChange(data)
                 recyclerView.adapter = adapter
 
             }

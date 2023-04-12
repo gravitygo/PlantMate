@@ -22,13 +22,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.plantmate.plantmate.databinding.ActivityScanQrBinding
 import com.plantmate.plantmate.fragments.FragmentTopNav
 import com.plantmate.plantmate.objects.FragmentUtils.replaceFragmentInit
 import com.plantmate.plantmate.objects.FullScreenUtils.setFullScreen
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-class ScanQrActivity : AppCompatActivity(){
+class ScanQrActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityScanQrBinding
     private val requestCodeCameraPermission = 1001
@@ -41,6 +42,7 @@ class ScanQrActivity : AppCompatActivity(){
         super.onResume()
         detector?.setProcessor(processor)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // set binding and fullscreen
         super.onCreate(savedInstanceState)
@@ -54,7 +56,7 @@ class ScanQrActivity : AppCompatActivity(){
         val topNav = FragmentTopNav(getColor(R.color.primary))
         replaceFragmentInit(topNav, R.id.top_Panel, supportFragmentManager)
 
-        if(ContextCompat.checkSelfPermission(
+        if (ContextCompat.checkSelfPermission(
                 this@ScanQrActivity,
                 Manifest.permission.CAMERA
             ) != PackageManager.PERMISSION_DENIED
@@ -77,7 +79,7 @@ class ScanQrActivity : AppCompatActivity(){
         detector!!.setProcessor(processor)
     }
 
-    private fun askForCameraPermission(){
+    private fun askForCameraPermission() {
         binding.cameraSurfaceView.visibility = View.GONE
         ActivityCompat.requestPermissions(
             this@ScanQrActivity,
@@ -92,11 +94,12 @@ class ScanQrActivity : AppCompatActivity(){
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == requestCodeCameraPermission && grantResults.isNotEmpty()){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == requestCodeCameraPermission && grantResults.isNotEmpty()) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setupControls()
-            } else{
-                Toast.makeText(applicationContext, "Camera Permissions Denied", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(applicationContext, "Camera Permissions Denied", Toast.LENGTH_SHORT)
+                    .show();
             }
         }
     }
@@ -119,47 +122,58 @@ class ScanQrActivity : AppCompatActivity(){
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
                     askForCameraPermission()
-                }
-                else{
+                } else {
                     cameraSource.start(surfaceHolder)
                 }
 
 
-            } catch (exception: Exception){
-                Toast.makeText(applicationContext, "Camera Access Denied", Toast.LENGTH_SHORT).show()
+            } catch (exception: Exception) {
+                Toast.makeText(applicationContext, "Camera Access Denied", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
 
-    private val processor = object : Detector.Processor<Barcode>{
+    private val processor = object : Detector.Processor<Barcode> {
         override fun release() {
         }
 
         override fun receiveDetections(detections: Detector.Detections<Barcode>?) {
-            if (detections != null && detections.detectedItems.isNotEmpty()){
-                    val codeContent = detections.detectedItems.valueAt(0).displayValue
-                    db.collection("users").document("${mAuth.currentUser?.uid}").collection("collection")
+            if (detections != null && detections.detectedItems.isNotEmpty()) {
+                val codeContent = detections.detectedItems.valueAt(0).displayValue
+                var flag = true
+
+                val collectionList = listOf("Araceae", "Asphodelaceae", "Cactaceae", "Rutaceae")
+                for (col in collectionList) {
+                    db.collection("users").document("${mAuth.currentUser?.uid}").collection(col)
                         .document(codeContent).get()
                         .addOnSuccessListener { result ->
-                            binding.scanButton.isEnabled =true
-                            binding.scanButton.text = "Click to visit plant page"
-                            binding.scanButton.backgroundTintList = ColorStateList.valueOf(getColor(R.color.jungle_green))
-                            binding.scanButton.setOnClickListener{
-                                        cameraSource.stop()
-                                        val goToPlant = Intent(applicationContext, ViewPlantActivity::class.java)
-                                        goToPlant.putExtra("plantID", result.id)
-                                        Log.d("inside plant id val",  result.id)
-                                        startActivity(goToPlant)
-                                        finish()
+                            if (result.getString("plantFamily") != null) {
+                                flag = false
+                                binding.scanButton.isEnabled = true
+                                binding.scanButton.text = "Click to visit plant page"
+                                binding.scanButton.backgroundTintList =
+                                    ColorStateList.valueOf(getColor(R.color.jungle_green))
+                                binding.scanButton.setOnClickListener {
+                                    cameraSource.stop()
+                                    val goToPlant =
+                                        Intent(applicationContext, ViewPlantActivity::class.java)
+                                    goToPlant.putExtra("plantID", result.id)
+                                    Log.d("inside plant id val", result.id)
+                                    startActivity(goToPlant)
+                                    finish()
+                                }
+                            } else {
+                                if(flag){
+                                    binding.scanButton.isEnabled = false
+                                    binding.scanButton.backgroundTintList =
+                                        ColorStateList.valueOf(getColor(R.color.gray))
+                                    Log.w("SCAN QR", "QR code invalid.")
+                                }
                             }
-                        } .addOnFailureListener { exception ->
-                            binding.scanButton.isEnabled = false
-                            binding.scanButton.backgroundTintList = ColorStateList.valueOf(getColor(R.color.gray))
-                            Log.w("SCAN QR", "QR code invalid.", exception)
                         }
+                }
 
-
-//                }
 
             }
         }

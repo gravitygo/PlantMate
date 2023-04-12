@@ -5,6 +5,6 @@ import com.google.firebase.Timestamp
 class TransactionData(
     val date: Timestamp,
     val cost: Number,
-    val plantID: String,
+    val plantName: String,
     val transactionType: String) {
 }
