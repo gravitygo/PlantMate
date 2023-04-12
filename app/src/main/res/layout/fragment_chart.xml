@@ -408,7 +408,7 @@
                                 android:id="@+id/textView7"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Propagation Cost"
+                                android:text="Propagation"
                                 android:textColor="@color/gray" />
 
                             <TextView
@@ -545,6 +545,23 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
             </LinearLayout>
+            <TextView
+                android:id="@+id/fragment_chart_tv_my_transaction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="My Transaction"
+                android:textColor="@color/tertiary"
+                android:textSize="25dp"
+                android:textStyle="bold" />
+
+            <FrameLayout
+                android:id="@+id/fragment_chart_fragment_view"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

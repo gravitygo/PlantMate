@@ -52,6 +52,7 @@ class AddPlantActivity : AppCompatActivity(){
     private val storage = FirebaseStorage.getInstance()
     val storageRef = storage.reference
     private lateinit var imageUri: Uri
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         mAuth = FirebaseAuth.getInstance()
