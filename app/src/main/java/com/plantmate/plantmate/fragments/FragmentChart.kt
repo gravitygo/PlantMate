@@ -105,7 +105,7 @@ class FragmentChart : Fragment(R.layout.fragment_chart)  {
         }
         btnInventory.setOnClickListener{
             removeBtn(btnInventory)
-            currType=3
+            currType=4
             binding.fragmentChartIvBackground.setBackgroundColor(resources.getColor(R.color.purple_primary))
 
             setData(chartsData[currType][currSize])
@@ -121,7 +121,7 @@ class FragmentChart : Fragment(R.layout.fragment_chart)  {
         }
         btnWithered.setOnClickListener{
             removeBtn(btnWithered)
-            currType=4
+            currType=3
             binding.fragmentChartIvBackground.setBackgroundColor(resources.getColor(R.color.red_primary))
 
             setData(chartsData[currType][currSize])
@@ -281,8 +281,8 @@ class FragmentChart : Fragment(R.layout.fragment_chart)  {
         binding.fragmentChartTvNetProfit.text = formatter.format(trend[0]["Value"])
         binding.fragmentChartTvSales.text = formatter.format(trend[1]["Value"])
         binding.fragmentChartTvPurchase.text = formatter.format(trend[2]["Value"])
-        binding.fragmentChartTvInventory.text = formatter.format(trend[3]["Value"])
-        binding.fragmentChartTvWithered.text = formatter.format(trend[4]["Value"])
+        binding.fragmentChartTvWithered.text = formatter.format(trend[3]["Value"])
+        binding.fragmentChartTvInventory.text = formatter.format(trend[4]["Value"])
     }
     @SuppressLint("SetTextI18n")
     fun currentValue(transactionType: Int){
