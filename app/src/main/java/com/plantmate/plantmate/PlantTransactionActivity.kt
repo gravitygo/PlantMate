@@ -64,8 +64,12 @@ class PlantTransactionActivity : AppCompatActivity(){
                 val price = binding.priceInput.text.toString().toDouble()
                 val total = NumberFormat.getNumberInstance(Locale.US).format(stock*price)
                 binding.totalPrice.text = total
-                binding.confirmModifyButton.isEnabled = true;
+                binding.confirmModifyButton.isEnabled = true
                 binding.confirmModifyButton.backgroundTintList = ColorStateList.valueOf(primaryColor)
+            } else{
+                binding.totalPrice.text = "0.00"
+                binding.confirmModifyButton.isEnabled = false
+                binding.confirmModifyButton.backgroundTintList = ColorStateList.valueOf(getColor(R.color.gray))
             }
         }
     }
@@ -73,20 +77,23 @@ class PlantTransactionActivity : AppCompatActivity(){
     private fun isValidEntry() : Boolean{
         var flag = false
 
-        if (binding.stockInput.text.toString().trim().isNotEmpty() && binding.priceInput.text.toString().trim().isNotEmpty()){
+        if (binding.stockInput.text.toString().isNotEmpty() && binding.priceInput.text.toString().isNotEmpty()){
+            Log.d("STOCK INPUT IS ", Integer.parseInt(binding.stockInput.text.toString()).toString())
+//            if (Integer.parseInt(binding.stockInput.text.toString()) > 0){
 
-            val stockInput = binding.stockInput.text.toString().toInt()
-            val princeInput = binding.priceInput.text.toString().toFloat()
+                val stockInput = binding.stockInput.text.toString().toInt()
+                val princeInput = binding.priceInput.text.toString().toFloat()
 
-            if (transactionType == "Sale" || transactionType == "Dispose"){
-                if(stockInput <= plantStock && princeInput > 0 && stockInput > 0){
-                    return true
+                if (transactionType == "Sale" || transactionType == "Dispose") {
+                    if (stockInput <= plantStock && princeInput > 0 && stockInput > 0) {
+                        flag = true
+                    }
+                } else if (transactionType == "Propagation" || transactionType == "Purchase") {
+                    if (princeInput > 0 && stockInput > 0) {
+                        flag = true
+                    }
                 }
-            } else if (transactionType == "Propagation" || transactionType == "Purchase"){
-                if(princeInput > 0 && stockInput > 0){
-                    return true
-                }
-            }
+//            }
         }
         return flag
     }

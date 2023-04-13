@@ -166,6 +166,7 @@ class ScanQrActivity : AppCompatActivity() {
                             } else {
                                 if(flag){
                                     binding.scanButton.isEnabled = false
+                                    binding.scanButton.text = "No valid QR detected"
                                     binding.scanButton.backgroundTintList =
                                         ColorStateList.valueOf(getColor(R.color.gray))
                                     Log.w("SCAN QR", "QR code invalid.")
