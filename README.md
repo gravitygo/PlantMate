@@ -9,7 +9,7 @@ PlantMate is an Android application that provides all the necessary tools to man
 - **Purchasing System:** Keep track of all your purchases in one place. You can add supplier details and attach invoices to each purchase, making it easy to track expenses.
 - **Statistics System:** PlantMate offers a powerful statistics system that lets you analyze your sales and inventory data to make informed decisions. You can see your best-selling plants, your top customers, and your most profitable items, all in one place.
 - **QR Code Generator and Reader:** PlantMate has a built-in QR code generator and reader that allows you to generate and scan codes quickly and easily. You can use the generated codes to label your plants, and the reader can help you quickly identify them.
-- **Streamlined Reports:** With PlantMate, you can easily generate reports on your sales and inventory data. You can either email them to yourself or download them directly from the app.
+- **Streamlined Reports:** With PlantMate, you can easily generate reports on your sales and inventory data. You can view them in app and see your transaction history.
 
 ## Usage
 
