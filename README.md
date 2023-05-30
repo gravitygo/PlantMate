@@ -1,6 +1,6 @@
 # PlantMate - Your Ultimate Plant Business Assistant
 
-PlantMate is an Android application that provides all the necessary tools to manage your plant business with ease. With its inventory, selling, purchasing, and statistics system, you can keep track of all your plants in one place. 
+PlantMate is a comprehensive Android application designed to streamline your plant business operations effortlessly. By incorporating an inventory management, sales and purchasing, as well as a robust statistical analysis system, it empowers you to conveniently track all your plants in a single, centralized platform.
 
 ## Features
 
