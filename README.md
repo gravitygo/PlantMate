@@ -15,6 +15,12 @@ PlantMate is an Android application that provides all the necessary tools to man
 
 PlantMate is designed to be easy to use, even for those who are not familiar with plant business management software. The intuitive interface makes it easy to add and manage plants, make sales, and generate reports. 
 
+## Demo
+  <a href="https://youtu.be/MbGRqRMblGg" target="_blank">
+   <img src="http://img.youtube.com/vi/nTQUwghvy5Q/mqdefault.jpg" alt="Watch the video" width="240" height="180" border="10" />
+  </a>
+
+
 ## GravityGo
   <a href="https://discordapp.com/users/326675091188613123">
     <img src="https://img.shields.io/static/v1?message=Discord&logo=discord&label=&color=7289DA&logoColor=white&labelColor=&style=for-the-badge" height="35" alt="discord logo"  /> 
