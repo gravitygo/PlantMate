@@ -17,7 +17,7 @@ PlantMate is designed to be easy to use, even for those who are not familiar wit
 
 ## Demo
   <a href="https://youtu.be/MbGRqRMblGg" target="_blank">
-   <img src="http://img.youtube.com/vi/nTQUwghvy5Q/mqdefault.jpg" alt="Watch the video" width="240" height="180" border="10" />
+   <img src="[http://img.youtube.com/vi/nTQUwghvy5Q/mqdefault.jpg](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white))" alt="Watch the video" width="240" height="180" border="10" />
   </a>
 
 
